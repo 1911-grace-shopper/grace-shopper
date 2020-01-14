@@ -9,7 +9,6 @@ class SingleProductView extends React.Component {
   }
 
   render() {
-    console.log(this.props)
     return (
       <div>
         <h2> {this.props.oneProduct.name} </h2>
@@ -29,7 +28,9 @@ class SingleProductView extends React.Component {
 
         <p>Number of Bathrooms: {this.props.oneProduct.bathrooms}</p>
 
-        <p>Description:{this.props.oneProduct.description}</p>
+        <p>Description: {this.props.oneProduct.description}</p>
+
+        <button>BUY ME!</button>
       </div>
     )
   }
