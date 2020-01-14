@@ -8,7 +8,22 @@ class SingleProductView extends React.Component {
     this.props.getOneProductFromServer(productId)
   }
 
+  addToCart(item) {
+    if (!sessionStorage.cart) {
+      sessionStorage.setItem('cart', JSON.stringify([]))
+    }
+    let currentCart = JSON.parse(sessionStorage.cart)
+
+    currentCart.push(item)
+    console.log(currentCart, 'Current CART')
+
+    sessionStorage.setItem('cart', JSON.stringify(currentCart))
+  }
+
   render() {
+    console.log(JSON.parse(sessionStorage.cart), 'STORAGE')
+
+    console.log(this.props.oneProduct, 'one Product')
     return (
       <div>
         <h2> {this.props.oneProduct.name} </h2>
@@ -30,7 +45,13 @@ class SingleProductView extends React.Component {
 
         <p>Description: {this.props.oneProduct.description}</p>
 
-        <button>BUY ME!</button>
+        <button
+          onClick={() => {
+            this.addToCart(this.props.oneProduct)
+          }}
+        >
+          BUY ME!
+        </button>
       </div>
     )
   }
