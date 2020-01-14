@@ -10,4 +10,18 @@ router.get('/', async (req, res, next) => {
   }
 })
 
+router.get('/:productId', async (req, res, next) => {
+  try {
+    const productId = req.params.productId
+    const findOneProduct = await Product.findOne({
+      where: {
+        id: productId
+      }
+    })
+    res.json(findOneProduct)
+  } catch (err) {
+    next(err)
+  }
+})
+
 module.exports = router
