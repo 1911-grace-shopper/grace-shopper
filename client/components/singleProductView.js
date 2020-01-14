@@ -9,9 +9,6 @@ class SingleProductView extends React.Component {
   }
 
   addToCart(item) {
-    if (!sessionStorage.cart) {
-      sessionStorage.setItem('cart', JSON.stringify([]))
-    }
     let currentCart = JSON.parse(sessionStorage.cart)
 
     currentCart.push(item)
@@ -21,9 +18,6 @@ class SingleProductView extends React.Component {
   }
 
   render() {
-    console.log(JSON.parse(sessionStorage.cart), 'STORAGE')
-
-    console.log(this.props.oneProduct, 'one Product')
     return (
       <div>
         <h2> {this.props.oneProduct.name} </h2>
