@@ -2,6 +2,7 @@
 
 const db = require('../server/db')
 const {User} = require('../server/db/models')
+const {Product} = require('../server/db/models')
 
 async function seed() {
   await db.sync({force: true})
@@ -12,8 +13,45 @@ async function seed() {
     User.create({email: 'murphy@email.com', password: '123'})
   ])
 
-  console.log(`seeded ${users.length} users`)
-  console.log(`seeded successfully`)
+  const products = await Promise.all([
+    Product.create({
+      name: 'house1',
+      price: 10000.0,
+      length: 17,
+      width: 4.5,
+      beds: 1,
+      bathrooms: 1,
+      description: 'the farm tiny house...',
+      style: 'farmhouse',
+      quantity: 3
+    }),
+    Product.create({
+      name: 'house2',
+      price: 103400.5,
+      length: 15,
+      width: 4.5,
+      beds: 1,
+      bathrooms: 1,
+      description: 'the modern tiny house...',
+      style: 'modern',
+      quantity: 12
+    }),
+    Product.create({
+      name: 'house3',
+      price: 9400.75,
+      length: 23,
+      width: 4.5,
+      beds: 2,
+      bathrooms: 1,
+      description: 'the victorian tiny house...',
+      style: 'victorian',
+      quantity: 5
+    })
+  ])
+
+  console.log(`ed ${users.length} users`)
+  console.log(`ed ${products.length} products`)
+  console.log(`ed successfully`)
 }
 
 // We've separated the `seed` function from the `runSeed` function.
