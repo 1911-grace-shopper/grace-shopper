@@ -20,7 +20,7 @@ class SingleProductView extends React.Component {
         <p>Price: {this.props.oneProduct.price}</p>
 
         <p>
-          Square Feet:{' '}
+          Square Feet:
           {this.props.oneProduct.length * this.props.oneProduct.width}
         </p>
 
