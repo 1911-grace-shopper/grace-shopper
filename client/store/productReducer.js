@@ -8,9 +8,9 @@ const getProducts = products => ({
   products
 })
 
-const getSingleProduct = oneProduct => ({
+const getSingleProduct = product => ({
   type: GET_SINGLE_PRODUCT,
-  singleProduct: oneProduct
+  selectedProduct: product
 })
 
 export const getProductsFromServer = () => async dispatch => {
@@ -25,9 +25,10 @@ export const getProductsFromServer = () => async dispatch => {
 
 export const getOneProductFromServer = productId => async dispatch => {
   try {
+    console.log('THIS IS THUNK CREATOR GET ONE PRODUCT', productId)
     const res = await Axios.get(`/api/products/${productId}`)
-    const info = res.data
-    dispatch(getSingleProduct(info))
+    const action = getSingleProduct(res.data)
+    dispatch(action)
   } catch (err) {
     console.log(err)
   }
@@ -35,7 +36,7 @@ export const getOneProductFromServer = productId => async dispatch => {
 
 const initialState = {
   products: [],
-  singleProduct: []
+  selectedProduct: {}
 }
 
 const productsReducer = (state = initialState, action) => {
@@ -43,7 +44,7 @@ const productsReducer = (state = initialState, action) => {
     case GET_PRODUCTS:
       return {...state, products: action.products}
     case GET_SINGLE_PRODUCT:
-      return {...state, singleProduct: action.singleProduct}
+      return {...state, selectedProduct: action.selectedProduct}
     default:
       return state
   }
