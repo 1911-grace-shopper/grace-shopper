@@ -18,6 +18,7 @@ router.get('/:productId', async (req, res, next) => {
         id: productId
       }
     })
+
     res.json(findOneProduct)
   } catch (err) {
     next(err)
