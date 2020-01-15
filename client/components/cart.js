@@ -24,6 +24,7 @@ class Cart extends React.Component {
           )
         })}
         <div>Total: $ {Number(total)}</div>
+        <button>Checkout</button>
       </div>
     )
   }
