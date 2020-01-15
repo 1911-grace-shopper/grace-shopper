@@ -11,11 +11,7 @@ class SingleProductView extends React.Component {
   }
 
   addToCart(item) {
-    let currentCart = []
-
-    if (sessionStorage.getItem('cart')) {
-      currentCart = JSON.parse(sessionStorage.getItem('cart'))
-    }
+    let currentCart = JSON.parse(sessionStorage.cart)
 
     currentCart.push(item)
     console.log(currentCart, 'Current CART')
@@ -24,7 +20,6 @@ class SingleProductView extends React.Component {
   }
 
   render() {
-    console.log(this.props)
     return (
       <div>
         <h2> {this.props.selectedProduct.name} </h2>
@@ -48,7 +43,7 @@ class SingleProductView extends React.Component {
 
         <button
           onClick={() => {
-            this.addToCart(this.props.selectedProduct)
+            this.addToCart(this.props.oneProduct)
           }}
         >
           BUY ME!
