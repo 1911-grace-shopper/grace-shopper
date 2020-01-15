@@ -11,19 +11,6 @@ class SingleProductView extends React.Component {
     }
   }
 
-  // addToCart(item) {
-  //   let currentCart = []
-
-  //   if (sessionStorage.getItem('cart')) {
-  //     currentCart = JSON.parse(sessionStorage.getItem('cart'))
-  //   }
-
-  //   currentCart.push(item)
-  //   console.log(currentCart, 'Current CART')
-
-  //   sessionStorage.setItem('cart', JSON.stringify(currentCart))
-  // }
-
   clickAdd(item) {
     this.props.addToCart(item)
   }
