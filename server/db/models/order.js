@@ -14,9 +14,9 @@ const Order = db.define('order', {
   recipientName: {
     type: Sequelize.STRING
   },
-  subtotal: {
-    type: Sequelize.DECIMAL(10, 2),
-    defaultValue: 0.0
+  total: {
+    type: Sequelize.INTEGER,
+    defaultValue: 0
   }
 })
 
