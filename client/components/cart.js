@@ -1,29 +1,44 @@
 import React from 'react'
+import {getCart} from '../store/cart'
+import {connect} from 'react-redux'
 
-const Cart = () => {
-  let items = [
-    {productId: 123, name: 'home1', price: 9979.0, count: 1},
-    {productId: 456, name: 'house2', price: 7999.0, count: 2}
-  ]
-  sessionStorage.setItem('cart', JSON.stringify(items))
-  const itemsInCart = JSON.parse(sessionStorage.getItem('cart'))
-  let total = 0
-  return (
-    <div>
-      {itemsInCart.map(item => {
-        total += item.price
-        return (
-          <ul key={item.productId}>
-            <li>{item.productId}</li>
-            <li>{item.name}</li>
-            <li>${item.price}</li>
-            <li>Quantity:{item.count}</li>
-          </ul>
-        )
-      })}
-      <div>subtotal:{total}</div>
-    </div>
-  )
+class Cart extends React.Component {
+  componentDidMount() {
+    this.props.getCurrentCart()
+  }
+
+  render() {
+    const itemsInCart = this.props.currentCart
+    let total = Number(0)
+
+    return (
+      <div>
+        {itemsInCart.map(item => {
+          total += Number(item.price)
+          return (
+            <ul key={item.id}>
+              <li>{item.name}</li>
+              <li>$ {item.price}</li>
+              <li>Quantity:</li>
+            </ul>
+          )
+        })}
+        <div>Total: $ {Number(total)}</div>
+      </div>
+    )
+  }
 }
 
-export default Cart
+const mapStateToProps = state => ({
+  currentCart: state.cart
+})
+
+const mapDispatchToProps = dispatch => {
+  return {
+    getCurrentCart: () => {
+      dispatch(getCart())
+    }
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Cart)

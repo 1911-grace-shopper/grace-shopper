@@ -1,6 +1,7 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {getOneProductFromServer} from '../store/productReducer'
+import {addItemToCart} from '../store/cart'
 
 class SingleProductView extends React.Component {
   componentDidMount() {
@@ -10,21 +11,25 @@ class SingleProductView extends React.Component {
     }
   }
 
-  addToCart(item) {
-    let currentCart = []
+  // addToCart(item) {
+  //   let currentCart = []
 
-    if (sessionStorage.getItem('cart')) {
-      currentCart = JSON.parse(sessionStorage.getItem('cart'))
-    }
+  //   if (sessionStorage.getItem('cart')) {
+  //     currentCart = JSON.parse(sessionStorage.getItem('cart'))
+  //   }
 
-    currentCart.push(item)
-    console.log(currentCart, 'Current CART')
+  //   currentCart.push(item)
+  //   console.log(currentCart, 'Current CART')
 
-    sessionStorage.setItem('cart', JSON.stringify(currentCart))
+  //   sessionStorage.setItem('cart', JSON.stringify(currentCart))
+  // }
+
+  clickAdd(item) {
+    this.props.addToCart(item)
   }
 
   render() {
-    console.log(this.props)
+    console.log(this.props, 'PROPS')
     return (
       <div>
         <h2> {this.props.selectedProduct.name} </h2>
@@ -48,7 +53,7 @@ class SingleProductView extends React.Component {
 
         <button
           onClick={() => {
-            this.addToCart(this.props.selectedProduct)
+            this.clickAdd(this.props.selectedProduct)
           }}
         >
           BUY ME!
@@ -59,13 +64,17 @@ class SingleProductView extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  selectedProduct: state.products.selectedProduct
+  selectedProduct: state.products.selectedProduct,
+  currentCart: state.cart
 })
 
 const mapDispatchToProps = dispatch => {
   return {
     getOneProductFromServer: productId =>
-      dispatch(getOneProductFromServer(productId))
+      dispatch(getOneProductFromServer(productId)),
+    addToCart: item => {
+      dispatch(addItemToCart(item))
+    }
   }
 }
 
