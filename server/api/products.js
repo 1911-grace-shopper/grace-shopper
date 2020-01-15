@@ -12,8 +12,8 @@ router.get('/', async (req, res, next) => {
 
 router.get('/:productId', async (req, res, next) => {
   try {
-    const productId = req.params.productId
-    const findOneProduct = await Product.findOne({
+    let productId = req.params.productId
+    let findOneProduct = await Product.findOne({
       where: {
         id: productId
       }
