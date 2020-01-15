@@ -1,7 +1,24 @@
 import React from 'react'
 import {connect} from 'react-redux'
+import {getOneProductFromServer} from '../store/productReducer'
 
 class SingleProductView extends React.Component {
+  componentDidMount() {
+    if (!this.props.selectedProduct.id) {
+      const productId = this.props.match.params.productId
+      this.props.getOneProductFromServer(productId)
+    }
+  }
+
+  addToCart(item) {
+    let currentCart = JSON.parse(sessionStorage.cart)
+
+    currentCart.push(item)
+    console.log(currentCart, 'Current CART')
+
+    sessionStorage.setItem('cart', JSON.stringify(currentCart))
+  }
+
   render() {
     return (
       <div>
@@ -34,4 +51,11 @@ const mapStateToProps = state => ({
   selectedProduct: state.products.selectedProduct
 })
 
-export default connect(mapStateToProps)(SingleProductView)
+const mapDispatchToProps = dispatch => {
+  return {
+    getOneProductFromServer: productId =>
+      dispatch(getOneProductFromServer(productId))
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(SingleProductView)

@@ -25,7 +25,6 @@ export const getProductsFromServer = () => async dispatch => {
 
 export const getOneProductFromServer = productId => async dispatch => {
   try {
-    console.log('THIS IS THUNK CREATOR GET ONE PRODUCT', productId)
     const res = await Axios.get(`/api/products/${productId}`)
     const action = getSingleProduct(res.data)
     dispatch(action)
