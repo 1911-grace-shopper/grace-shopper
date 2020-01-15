@@ -2,6 +2,21 @@ import React from 'react'
 import {connect} from 'react-redux'
 
 class SingleProductView extends React.Component {
+  
+  componentDidMount() {
+    const productId = this.props.match.params.productId
+    this.props.getOneProductFromServer(productId)
+  }
+
+  addToCart(item) {
+    let currentCart = JSON.parse(sessionStorage.cart)
+
+    currentCart.push(item)
+    console.log(currentCart, 'Current CART')
+
+    sessionStorage.setItem('cart', JSON.stringify(currentCart))
+  }
+  
   render() {
     return (
       <div>
@@ -24,7 +39,13 @@ class SingleProductView extends React.Component {
 
         <p>Description: {this.props.selectedProduct.description}</p>
 
-        <button>BUY ME!</button>
+        <button
+          onClick={() => {
+            this.addToCart(this.props.oneProduct)
+          }}
+        >
+          BUY ME!
+        </button>
       </div>
     )
   }
