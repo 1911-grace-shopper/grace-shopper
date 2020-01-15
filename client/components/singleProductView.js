@@ -3,12 +3,12 @@ import {connect} from 'react-redux'
 import {getOneProductFromServer} from '../store/productReducer'
 
 class SingleProductView extends React.Component {
-
   componentDidMount() {
     if (!this.props.selectedProduct.id) {
       const productId = this.props.match.params.productId
       this.props.getOneProductFromServer(productId)
     }
+  }
 
   addToCart(item) {
     let currentCart = JSON.parse(sessionStorage.cart)
