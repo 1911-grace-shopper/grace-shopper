@@ -24,6 +24,20 @@ router.get('/:orderId', async (req, res, next) => {
   }
 })
 
+//specific item in specific order
+router.get('/:orderId/:itemId', async (req, res, next) => {
+  const oId = req.params.orderId
+  const pId = req.params.itemId
+  try {
+    const order = await orderDetails.findOne({
+      where: {orderId: oId, productId: pId}
+    })
+    res.json(order)
+  } catch (error) {
+    next(error)
+  }
+})
+
 //add a new order
 router.post('/', async (req, res, next) => {
   try {
@@ -31,6 +45,25 @@ router.post('/', async (req, res, next) => {
     res.json(newOrder)
   } catch (err) {
     next(err)
+  }
+})
+
+//update order count (quantity)
+router.put('/:orderId/:itemId', async function(req, res, next) {
+  const oId = req.params.orderId
+  const pId = req.params.itemId
+  try {
+    const [numAffectedRows, affectedRows] = await orderDetails.update(
+      {
+        count: req.body.count
+      },
+      {
+        where: {orderId: oId, productId: pId},
+        returning: true
+      }
+    )
+  } catch (error) {
+    next(error)
   }
 })
 
