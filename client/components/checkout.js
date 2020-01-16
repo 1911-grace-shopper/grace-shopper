@@ -11,7 +11,8 @@ class Checkout extends React.Component {
       shippingCity: '',
       shippingState: '',
       shippingZipCode: '',
-      deliveryMethod: ''
+      deliveryMethod: '',
+      total: ''
     }
     this.handleChange = this.handleChange.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
