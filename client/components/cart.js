@@ -15,12 +15,13 @@ class Cart extends React.Component {
     return (
       <div>
         {itemsInCart.map(item => {
-          total += Number(item.price)
+          total += Number(item.price * item.count)
           return (
             <ul key={item.id}>
               <li>{item.name}</li>
-              <li>$ {item.price}</li>
-              <li>Quantity:</li>
+              <li>Unit Price: ${item.price}</li>
+              <li>Total: {item.price * item.count}</li>
+              <li>Quantity: {item.count}</li>
             </ul>
           )
         })}
