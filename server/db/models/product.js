@@ -23,8 +23,7 @@ const Product = db.define('product', {
     type: Sequelize.INTEGER
   },
   imageUrl: {
-    type: Sequelize.TEXT,
-    defaultValue: 'default/main.jpg'
+    type: Sequelize.TEXT
   },
   description: {
     type: Sequelize.TEXT

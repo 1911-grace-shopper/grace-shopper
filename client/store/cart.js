@@ -1,3 +1,5 @@
+import Axios from 'axios'
+
 const GET_CART = 'GET_CART'
 const ADD_ITEM_TO_CART = 'ADD_ITEM_TO_CART'
 const REMOVE_ITEM_FROM_CART = 'REMOVE_ITEM_FROM_CART'
@@ -24,14 +26,27 @@ const addedItem = item => ({
   item: item
 })
 
-export const addItemToCart = item => {
-  return dispatch => {
+export const addItemToCart = (item, user) => {
+  return async dispatch => {
     let currentCart = []
 
+    //if the cart already exists, carry through current cart
     if (sessionStorage.getItem('cart')) {
       currentCart = JSON.parse(sessionStorage.getItem('cart'))
+    } else {
+      //if the cart does not exist
+      const newOrder = {
+        orderComplete: false,
+        userId: user.id
+      }
+      //creates new pending order if cart was previously empty
+      const {data} = await Axios.post('/api/checkout', newOrder)
+
+      //gives the new cart item an order Id
+      item.orderId = data.id
     }
 
+    //cart now exists (empty if nothing has been added before)
     //if the item is already in the cart
     if (
       currentCart.some(itemInCart => {
@@ -40,13 +55,30 @@ export const addItemToCart = item => {
         }
       })
     ) {
-      currentCart.forEach(itemInCart => {
+      //increases the count of that item
+      currentCart.forEach(async itemInCart => {
         if (itemInCart.id === item.id) {
           itemInCart.count += 1
+          //if count needs to be updated in order details
+          await Axios.put(`/api/carts/${itemInCart.orderId}/${itemInCart.id}`, {
+            count: itemInCart.count
+          })
         }
       })
     } else {
       item.count = 1
+
+      if (!item.orderId) {
+        item.orderId = currentCart[0].orderId
+      }
+
+      let newCart = {
+        priceAtPurchase: item.price,
+        count: item.count,
+        orderId: item.orderId,
+        productId: item.id
+      }
+      await Axios.post('/api/carts', newCart)
       currentCart.push(item)
     }
 
@@ -59,12 +91,10 @@ export const deletedItem = id => {
   return dispatch => {
     currentCart = JSON.parse(sessionStorage.getItem('cart'))
 
-    let itemToDeleteIndex = currentCart.indexOf()
-
     //checks if there is more than 1 in the cart
 
     //removes item from cart if it has the deleted item id
-    updatedCart = currentCart.filter(itemInCart => itemInCart.id !== id)
+    // updatedCart = currentCart.filter(itemInCart => itemInCart.id !== id)
   }
 }
 
@@ -88,5 +118,7 @@ const cartReducer = (state = initialState, action) => {
       return state
   }
 }
+
+function findItem(id, cart) {}
 
 export default cartReducer
