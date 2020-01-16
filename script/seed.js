@@ -16,7 +16,7 @@ async function seed() {
   const products = await Promise.all([
     Product.create({
       name: 'house1',
-      price: 10000.0,
+      price: 100000,
       length: 17,
       width: 4.5,
       beds: 1,
@@ -27,7 +27,7 @@ async function seed() {
     }),
     Product.create({
       name: 'house2',
-      price: 103400.5,
+      price: 103400,
       length: 15,
       width: 4.5,
       beds: 1,
@@ -38,7 +38,7 @@ async function seed() {
     }),
     Product.create({
       name: 'house3',
-      price: 9400.75,
+      price: 940075,
       length: 23,
       width: 4.5,
       beds: 2,
