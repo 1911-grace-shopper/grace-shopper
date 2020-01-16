@@ -10,44 +10,22 @@ const Order = db.define('order', {
     type: Sequelize.ENUM('Delivery', 'Pick-Up')
   },
   shippingAddressLineOne: {
-    type: Sequelize.STRING,
-    allowNull: false,
-    validate: {
-      notEmpty: true
-    }
+    type: Sequelize.STRING
   },
   shippingAddressLineTwo: {
     type: Sequelize.STRING
   },
   shippingCity: {
-    type: Sequelize.STRING,
-    allowNull: false,
-    validate: {
-      notEmpty: true
-    }
+    type: Sequelize.STRING
   },
   shippingState: {
-    type: Sequelize.STRING,
-    allowNull: false,
-    validate: {
-      notEmpty: true,
-      len: 2
-    }
+    type: Sequelize.STRING
   },
   shippingAddressZipCode: {
-    type: Sequelize.STRING,
-    allowNull: false,
-    validate: {
-      notEmpty: true,
-      len: 5
-    }
+    type: Sequelize.STRING
   },
   recipientName: {
-    type: Sequelize.STRING,
-    allowNull: false,
-    validate: {
-      notEmpty: true
-    }
+    type: Sequelize.STRING
   },
   total: {
     type: Sequelize.INTEGER,
