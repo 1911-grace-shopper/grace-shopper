@@ -1,6 +1,7 @@
 import React from 'react'
 import {getCart} from '../store/cart'
 import {connect} from 'react-redux'
+import {Link} from 'react-router-dom'
 
 class Cart extends React.Component {
   componentDidMount() {
@@ -25,7 +26,9 @@ class Cart extends React.Component {
           )
         })}
         <div>Total: $ {Number(total)}</div>
-        <button>Checkout</button>
+        <Link to={{pathname: '/checkout', state: {total: total}}}>
+          Checkout
+        </Link>
       </div>
     )
   }
