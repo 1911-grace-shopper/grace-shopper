@@ -3,12 +3,25 @@ const db = require('../db')
 
 const Order = db.define('order', {
   orderComplete: {
-    type: Sequelize.BOOLEAN
+    type: Sequelize.BOOLEAN,
+    defaultValue: false
   },
   deliveryMethod: {
     type: Sequelize.ENUM('Delivery', 'Pick-Up')
   },
-  shippingAddress: {
+  shippingAddressLineOne: {
+    type: Sequelize.STRING
+  },
+  shippingAddressLineTwo: {
+    type: Sequelize.STRING
+  },
+  shippingCity: {
+    type: Sequelize.STRING
+  },
+  shippingState: {
+    type: Sequelize.STRING
+  },
+  shippingAddressZipCode: {
     type: Sequelize.STRING
   },
   recipientName: {

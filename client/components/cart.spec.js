@@ -35,14 +35,10 @@ describe('Cart Unit Test:', () => {
   })
 
   it('both user and guest can add items into the cart', () => {
-    console.log(component)
     expect(component.find('ul.cartItem')).to.have.lengthOf(2)
-    expect(
-      component
-        .find('ul.cartItem li:first-child')
-        .first()
-        .text()
-    ).toEqual('12345')
+    expect(component.find('ul.cartItem li:first-child').text()).to.be.equal(
+      '12345'
+    )
   })
 
   it('both user and guest can delete the items in the cart', () => {

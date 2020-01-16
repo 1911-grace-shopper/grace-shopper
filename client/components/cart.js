@@ -1,6 +1,7 @@
 import React from 'react'
 import {getCart} from '../store/cart'
 import {connect} from 'react-redux'
+import {Link} from 'react-router-dom'
 
 export class Cart extends React.Component {
   componentDidMount() {
@@ -14,18 +15,20 @@ export class Cart extends React.Component {
     return (
       <div>
         {itemsInCart.map(item => {
-          total += Number(item.price)
+          total += Number(item.price * item.count)
           return (
             <ul key={item.id} className="cartItem">
               <li>{item.name}</li>
-              <li>$ {item.price}</li>
-              <li>Quantity:</li>
-              <button type="button">Remove</button>
+              <li>Unit Price: ${item.price}</li>
+              <li>Total: {item.price * item.count}</li>
+              <li>Quantity: {item.count}</li>
             </ul>
           )
         })}
         <div>Total: $ {Number(total)}</div>
-        <button type="button">Checkout</button>
+        <Link to={{pathname: '/checkout', state: {total: total}}}>
+          Checkout
+        </Link>
       </div>
     )
   }
