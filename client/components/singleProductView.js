@@ -11,8 +11,8 @@ class SingleProductView extends React.Component {
     }
   }
 
-  clickAdd(item) {
-    this.props.addToCart(item)
+  clickAdd(item, user) {
+    this.props.addToCart(item, user)
   }
 
   render() {
@@ -40,7 +40,7 @@ class SingleProductView extends React.Component {
 
         <button
           onClick={() => {
-            this.clickAdd(this.props.selectedProduct)
+            this.clickAdd(this.props.selectedProduct, this.props.user)
           }}
         >
           BUY ME!
@@ -52,15 +52,17 @@ class SingleProductView extends React.Component {
 
 const mapStateToProps = state => ({
   selectedProduct: state.products.selectedProduct,
-  currentCart: state.cart
+  currentCart: state.cart,
+  user: state.user
 })
 
 const mapDispatchToProps = dispatch => {
   return {
     getOneProductFromServer: productId =>
       dispatch(getOneProductFromServer(productId)),
-    addToCart: item => {
-      dispatch(addItemToCart(item))
+    addToCart: (item, user) => {
+      console.log(user, 'USER')
+      dispatch(addItemToCart(item, user))
     }
   }
 }
