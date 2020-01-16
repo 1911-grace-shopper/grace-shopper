@@ -13,8 +13,18 @@ const completeCheckout = updateOrder => ({
 
 export const completeAnOrder = updateOrder => async dispatch => {
   try {
-    const res = await Axios.put('/api/checkout/:orderId', updateOrder)
-    console.log(res)
+    console.log('!!! this works', updateOrder)
+    const res = await Axios.put(
+      `/api/checkout/${updateOrder.currentCart.orderId}`,
+      updateOrder
+    )
+
+    console.log(
+      'this is from the complete an order thunk',
+      res.data,
+      updateOrder
+    )
+
     const info = res.data
     dispatch(completeCheckout(info))
   } catch (err) {
@@ -27,7 +37,7 @@ const checkoutReducer = (state = initialState, action) => {
     case COMPLETE_CHECKOUT:
       return {
         ...state,
-        updateOrder: [action.updateOrder]
+        updateOrder: action.updateOrder
       }
     default:
       return state

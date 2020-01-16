@@ -12,7 +12,8 @@ router.put('/:orderId', async (req, res, next) => {
         shippingState: req.body.shippingState,
         shippingAddressZipCode: req.body.shippingAddressZipCode,
         recipientName: req.body.recipientName,
-        total: req.body.total
+        total: req.body.total,
+        orderComplete: req.body.total
       },
       {
         where: {

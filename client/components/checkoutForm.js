@@ -82,7 +82,7 @@ const Form = props => (
         type="submit"
         disabled={!props.recipientName}
         to={{pathname: '/confirmation'}}
-        onClick={props.handleSubmit}
+        onClick={() => props.handleSubmit(props)}
       >
         Submit Order
       </Link>
