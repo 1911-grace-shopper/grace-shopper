@@ -30,7 +30,7 @@ export const addItemToCart = (item, user) => {
   return async dispatch => {
     let currentCart = []
 
-    //if the cart already exists, carrythrough current cart
+    //if the cart already exists, carry through current cart
     if (sessionStorage.getItem('cart')) {
       currentCart = JSON.parse(sessionStorage.getItem('cart'))
     } else {
@@ -42,18 +42,11 @@ export const addItemToCart = (item, user) => {
       //creates new pending order if cart was previously empty
       const {data} = await Axios.post('/api/checkout', newOrder)
 
-      let newCart = {
-        priceAtPurchase: item.price,
-        count: item.count,
-        orderId: data.id,
-        productId: item.id
-      }
-      await Axios.post('/api/carts', newCart)
-
-      //gives the new cart an order Id
-      currentCart.orderId = data.id
+      //gives the new cart item an order Id
+      item.orderId = data.id
     }
 
+    //cart now exists (empty if nothing has been added before)
     //if the item is already in the cart
     if (
       currentCart.some(itemInCart => {
@@ -62,15 +55,33 @@ export const addItemToCart = (item, user) => {
         }
       })
     ) {
-      currentCart.forEach(itemInCart => {
+      //increases the count of that item
+      currentCart.forEach(async itemInCart => {
         if (itemInCart.id === item.id) {
           itemInCart.count += 1
+          //if count needs to be updated in order details
+          await Axios.put(`/api/carts/${itemInCart.orderId}/${itemInCart.id}`, {
+            count: itemInCart.count
+          })
         }
       })
     } else {
       item.count = 1
+
+      if (!item.orderId) {
+        item.orderId = currentCart[0].orderId
+      }
+
+      let newCart = {
+        priceAtPurchase: item.price,
+        count: item.count,
+        orderId: item.orderId,
+        productId: item.id
+      }
+      await Axios.post('/api/carts', newCart)
+      currentCart.push(item)
     }
-    currentCart.push(item)
+
     sessionStorage.setItem('cart', JSON.stringify(currentCart))
     dispatch(addedItem(item))
   }

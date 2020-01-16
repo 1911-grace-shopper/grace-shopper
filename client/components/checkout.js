@@ -1,6 +1,7 @@
 import React from 'react'
 import {connect} from 'react-redux'
-import {completeAnOrder} from '../store/checkout'
+import Form from './checkoutForm'
+import completeAnOrder from '../store/checkout'
 
 class Checkout extends React.Component {
   constructor(props) {
@@ -12,11 +13,13 @@ class Checkout extends React.Component {
       shippingCity: '',
       shippingState: '',
       shippingAddressZipCode: '',
-      deliveryMethod: ''
-      // total: {this.props.location.state.total}
+      deliveryMethod: '',
+      total: this.props.location.state.total,
+      warningMessage: 'required'
     }
     this.handleChange = this.handleChange.bind(this)
-    this.handleSubmit = this.handleSubmit.bind(this)
+    this.isComplete = this.isComplete.bind(this)
+    // this.handleSubmit = this.handleSubmit.bind(this)
   }
 
   handleChange(event) {
@@ -25,89 +28,45 @@ class Checkout extends React.Component {
     })
   }
 
-  handleSubmit(event) {
-    event.preventDefault()
-    this.props.completeAnOrder(this.state.updateOrder)
-    //this.props.functioname(this.state)
-    //this.setstate
-    //mapdispatchtoprops - pass in order DONE
-    //mapstatetoprops - pass in state
+  isComplete() {
+    if (
+      !this.state.recipientName ||
+      !this.state.shippingAddressLineOne ||
+      !this.state.shippingCity ||
+      !this.state.shippingState ||
+      !this.state.shippingAddressZipCode ||
+      !this.state.deliveryMethod
+    )
+      return false
+    else return true
   }
+  //mapping to list items
 
   render() {
-    console.log('from checkout', this.props)
+    console.log('this is SESSIONSTORAGE', sessionStorage)
+
     return (
-      <form onSubmit={this.handleSubmit}>
-        <label>
-          Recipient Name:
-          <input
-            type="text"
-            name="recipientName"
-            onChange={this.handleChange}
-            value={this.state.recipientName}
-          />
-        </label>
-        <h3>Shipping Address</h3>
-        <label>
-          Line 1:
-          <input
-            type="text"
-            name="shippingAddressLineOne"
-            onChange={this.handleChange}
-            value={this.state.shippingAddressLineOne}
-          />
-        </label>
-        <label>
-          Line 2:
-          <input
-            type="text"
-            name="shippingAddressLineTwo"
-            onChange={this.handleChange}
-            value={this.state.shippingAddressLineTwo}
-          />
-        </label>
-        <label>
-          City:
-          <input
-            type="text"
-            name="shippingCity"
-            onChange={this.handleChange}
-            value={this.state.shippingCity}
-          />
-        </label>
-        <label>
-          State:
-          <input
-            type="text"
-            name="shippingState"
-            onChange={this.handleChange}
-            value={this.state.shippingState}
-          />
-        </label>
-        <label>
-          Zip:
-          <input
-            type="number"
-            name="shippingAddressZipCode"
-            onChange={this.handleChange}
-            value={this.state.shippingAddressZipCode}
-          />
-        </label>
-        <label>
-          Delivery Method:
-          <select
-            name="deliveryMethod"
-            value={this.state.deliveryMethod}
-            onChange={this.handleChange}
-          >
-            <option>Please Select</option>
-            <option value="Delivery">Delivery</option>
-            <option value="Pick-Up">Pick-Up</option>
-          </select>
-        </label>
-        <label>Total: {this.props.location.state.total}</label>
-        <button onClick={this.handleSubmit}>Submit</button>
-      </form>
+      <div>
+        <div>
+          {this.props.currentCart.map(item => {
+            return (
+              <ul key={item.id}>
+                <li>{item.imageUrl}</li>
+                <li>{item.name}</li>
+                <li>Unit Price: ${item.price}</li>
+                <li>Quantity: {item.count}</li>
+              </ul>
+            )
+          })}
+        </div>
+        <div />
+        <Form
+          {...this.state}
+          handleChange={this.handleChange}
+          handleSubmit={this.handleSubmit}
+          isComplete={this.isComplete}
+        />
+      </div>
     )
   }
 }
