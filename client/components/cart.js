@@ -2,7 +2,7 @@ import React from 'react'
 import {getCart} from '../store/cart'
 import {connect} from 'react-redux'
 
-class Cart extends React.Component {
+export class Cart extends React.Component {
   componentDidMount() {
     this.props.getCurrentCart()
   }
@@ -16,15 +16,16 @@ class Cart extends React.Component {
         {itemsInCart.map(item => {
           total += Number(item.price)
           return (
-            <ul key={item.id}>
+            <ul key={item.id} className="cartItem">
               <li>{item.name}</li>
               <li>$ {item.price}</li>
               <li>Quantity:</li>
+              <button type="button">Remove</button>
             </ul>
           )
         })}
         <div>Total: $ {Number(total)}</div>
-        <button>Checkout</button>
+        <button type="button">Checkout</button>
       </div>
     )
   }
