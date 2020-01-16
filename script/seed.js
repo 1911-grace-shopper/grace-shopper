@@ -26,7 +26,7 @@ async function seed() {
       quantity: 12
     }),
     Product.create({
-      name: 'Lykkee',
+      name: 'Lykke',
       price: 0,
       length: 24,
       width: 8.5,
@@ -58,17 +58,7 @@ async function seed() {
       quantity: 3
     }),
     Product.create({
-      name: 'Noah',
-      price: 89500000,
-      length: 26,
-      width: 8.5,
-      beds: 2,
-      description: `The Silhouette is a 26' x 8.5' tiny house that balances rustic charm and industrial chic seamlessly. This home was designed with the panoramic views of Vermont in mind. Two massive fixed windows in the living area and an oversized round window in the shower area will make you feel like you're living as close to the great outdoors as possible.`,
-      style: 'industrial',
-      quantity: 3
-    }),
-    Product.create({
-      name: 'Noah',
+      name: 'Silhouette',
       price: 89500000,
       length: 26,
       width: 8.5,
@@ -108,7 +98,7 @@ async function seed() {
       quantity: 5
     }),
     Product.create({
-      name: `Nomad's nest`,
+      name: `Nomads nest`,
       price: 86000000,
       length: 30,
       width: 10,
