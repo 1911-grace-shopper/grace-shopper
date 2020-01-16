@@ -1,5 +1,6 @@
 import React from 'react'
 import {connect} from 'react-redux'
+import Axios from 'axios'
 
 class Checkout extends React.Component {
   constructor(props) {
@@ -10,7 +11,7 @@ class Checkout extends React.Component {
       shippingAddressLineTwo: '',
       shippingCity: '',
       shippingState: '',
-      shippingZipCode: '',
+      shippingAddressZipCode: '',
       deliveryMethod: '',
       total: ''
     }
@@ -19,20 +20,34 @@ class Checkout extends React.Component {
   }
 
   handleChange(event) {
-    console.log('this is handleChange', event.target.name)
+    console.log('this is delic=verymethod state', this.state.deliveryMethod)
+    console.log('event name', event.target.name)
+    console.log('value', event.target.value)
     this.setState({
       [event.target.name]: event.target.value
     })
   }
 
-  handleSubmit(event) {
+  async handleSubmit(event) {
     event.preventDefault()
-    this.props.addNewOrder(this.state)
-    this.setState({
-      recipientName: '',
-      shippingAddress: '',
-      deliveryMethod: ''
-    })
+    // this.props.addNewOrder(this.state)
+    try {
+      const res = await Axios.post('/api/checkout', this.state)
+      this.setState({
+        state: [res.data]
+      })
+    } catch (error) {
+      console.log(
+        'this is a temporary error handle from components.checkout.js',
+        error
+      )
+    }
+
+    // this.setState({
+    //   recipientName: '',
+    //   shippingAddress: '',
+    //   deliveryMethod: ''
+    // })
   }
 
   render() {
@@ -89,9 +104,9 @@ class Checkout extends React.Component {
           Zip:
           <input
             type="number"
-            name="shippingZipCode"
+            name="shippingAddressZipCode"
             onChange={this.handleChange}
-            value={this.state.shippingZipCode}
+            value={this.state.shippingAddressZipCode}
           />
         </label>
         <label>
@@ -101,11 +116,13 @@ class Checkout extends React.Component {
             value={this.state.deliveryMethod}
             onChange={this.handleChange}
           >
+            <option>Please Select</option>
             <option value="Delivery">Delivery</option>
             <option value="Pick-Up">Pick-Up</option>
           </select>
         </label>
-        <label>Subtotal: {this.props.location.state.total}</label>
+        <label>Total: {this.props.location.state.total}</label>
+        <button onClick={this.handleSubmit}>Submit</button>
       </form>
     )
   }

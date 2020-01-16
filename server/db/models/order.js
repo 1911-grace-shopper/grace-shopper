@@ -13,7 +13,7 @@ const Order = db.define('order', {
     type: Sequelize.STRING,
     allowNull: false,
     validate: {
-      isEmpty: false
+      notEmpty: true
     }
   },
   shippingAddressLineTwo: {
@@ -23,14 +23,14 @@ const Order = db.define('order', {
     type: Sequelize.STRING,
     allowNull: false,
     validate: {
-      isEmpty: false
+      notEmpty: true
     }
   },
   shippingState: {
     type: Sequelize.STRING,
     allowNull: false,
     validate: {
-      isEmpty: false,
+      notEmpty: true,
       len: 2
     }
   },
@@ -38,7 +38,7 @@ const Order = db.define('order', {
     type: Sequelize.STRING,
     allowNull: false,
     validate: {
-      isEmpty: false,
+      notEmpty: true,
       len: 5
     }
   },
@@ -46,7 +46,7 @@ const Order = db.define('order', {
     type: Sequelize.STRING,
     allowNull: false,
     validate: {
-      isEmpty: false
+      notEmpty: true
     }
   },
   total: {
