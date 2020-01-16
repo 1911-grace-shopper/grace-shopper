@@ -1,20 +1,8 @@
-// import React from 'react'
+import React from 'react'
 
-// class Confirmation extends React.Component {
-
-//   render(){
-//     return (
-//       console.log(this.props)
-//       {itemsInCart.map(item => {
-//         total += Number(item.price)
-//         return (
-//           <ul key={item.id}>
-//             <li>{item.name}</li>
-//             <li>$ {item.price}</li>
-//             <li>Quantity:</li>
-//           </ul>
-//         )
-//       })}
-//     )
-//   }
-// }
+export default class Confirmation extends React.Component {
+  render() {
+    console.log('confirmation', this.props)
+    return <h3>Thanks for your order!</h3>
+  }
+}
