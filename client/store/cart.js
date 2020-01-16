@@ -32,15 +32,43 @@ export const addItemToCart = item => {
       currentCart = JSON.parse(sessionStorage.getItem('cart'))
     }
 
-    currentCart.push(item)
-    console.log(currentCart, 'Current CART')
+    //if the item is already in the cart
+    if (
+      currentCart.some(itemInCart => {
+        if (itemInCart.id === item.id) {
+          return true
+        }
+      })
+    ) {
+      currentCart.forEach(itemInCart => {
+        if (itemInCart.id === item.id) {
+          itemInCart.count += 1
+        }
+      })
+    } else {
+      item.count = 1
+      currentCart.push(item)
+    }
 
     sessionStorage.setItem('cart', JSON.stringify(currentCart))
     dispatch(addedItem(item))
   }
 }
 
-const removeFromCart = id => ({
+export const deletedItem = id => {
+  return dispatch => {
+    currentCart = JSON.parse(sessionStorage.getItem('cart'))
+
+    let itemToDeleteIndex = currentCart.indexOf()
+
+    //checks if there is more than 1 in the cart
+
+    //removes item from cart if it has the deleted item id
+    updatedCart = currentCart.filter(itemInCart => itemInCart.id !== id)
+  }
+}
+
+const removedFromCart = id => ({
   type: REMOVE_ITEM_FROM_CART,
   id: id
 })
