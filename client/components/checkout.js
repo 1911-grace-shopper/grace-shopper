@@ -13,6 +13,7 @@ class Checkout extends React.Component {
       shippingState: '',
       shippingAddressZipCode: '',
       deliveryMethod: ''
+      // total: {this.props}
     }
     this.handleChange = this.handleChange.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
@@ -113,7 +114,8 @@ class Checkout extends React.Component {
 
 const mapStateToProps = function(state) {
   return {
-    updateOrder: state.updateOrder
+    updateOrder: state.updateOrder,
+    currentCart: state.cart
   }
 }
 
