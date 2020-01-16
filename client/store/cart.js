@@ -1,3 +1,5 @@
+import Axios from 'axios'
+
 const GET_CART = 'GET_CART'
 const ADD_ITEM_TO_CART = 'ADD_ITEM_TO_CART'
 const REMOVE_ITEM_FROM_CART = 'REMOVE_ITEM_FROM_CART'
@@ -24,12 +26,32 @@ const addedItem = item => ({
   item: item
 })
 
-export const addItemToCart = item => {
-  return dispatch => {
+export const addItemToCart = (item, user) => {
+  return async dispatch => {
     let currentCart = []
 
+    //if the cart already exists, carrythrough current cart
     if (sessionStorage.getItem('cart')) {
       currentCart = JSON.parse(sessionStorage.getItem('cart'))
+    } else {
+      //if the cart does not exist
+      const newOrder = {
+        orderComplete: false,
+        userId: user.id
+      }
+      //creates new pending order if cart was previously empty
+      const {data} = await Axios.post('/api/checkout', newOrder)
+
+      let newCart = {
+        priceAtPurchase: item.price,
+        count: item.count,
+        orderId: data.id,
+        productId: item.id
+      }
+      await Axios.post('/api/carts', newCart)
+
+      //gives the new cart an order Id
+      currentCart.orderId = data.id
     }
 
     //if the item is already in the cart
@@ -47,9 +69,8 @@ export const addItemToCart = item => {
       })
     } else {
       item.count = 1
-      currentCart.push(item)
     }
-
+    currentCart.push(item)
     sessionStorage.setItem('cart', JSON.stringify(currentCart))
     dispatch(addedItem(item))
   }
@@ -59,12 +80,10 @@ export const deletedItem = id => {
   return dispatch => {
     currentCart = JSON.parse(sessionStorage.getItem('cart'))
 
-    let itemToDeleteIndex = currentCart.indexOf()
-
     //checks if there is more than 1 in the cart
 
     //removes item from cart if it has the deleted item id
-    updatedCart = currentCart.filter(itemInCart => itemInCart.id !== id)
+    // updatedCart = currentCart.filter(itemInCart => itemInCart.id !== id)
   }
 }
 
@@ -88,5 +107,7 @@ const cartReducer = (state = initialState, action) => {
       return state
   }
 }
+
+function findItem(id, cart) {}
 
 export default cartReducer
