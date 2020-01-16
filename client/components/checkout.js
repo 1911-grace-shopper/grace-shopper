@@ -35,6 +35,7 @@ class Checkout extends React.Component {
   }
 
   render() {
+    console.log('from checkout', this.props)
     return (
       <form onSubmit={this.handleSubmit}>
         <label>
@@ -103,7 +104,7 @@ class Checkout extends React.Component {
             <option value="Pick-Up">Pick-Up</option>
           </select>
         </label>
-        <label>Subtotal:</label>
+        <label>Subtotal: {this.props.location.state.total}</label>
       </form>
     )
   }
