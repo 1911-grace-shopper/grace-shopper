@@ -1,6 +1,6 @@
 import React from 'react'
 import {connect} from 'react-redux'
-import completeAnOrder from '../store'
+import {completeAnOrder} from '../store/checkout'
 
 class Checkout extends React.Component {
   constructor(props) {
@@ -13,7 +13,7 @@ class Checkout extends React.Component {
       shippingState: '',
       shippingAddressZipCode: '',
       deliveryMethod: ''
-      // total: {this.props}
+      // total: {this.props.location.state.total}
     }
     this.handleChange = this.handleChange.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
@@ -27,7 +27,7 @@ class Checkout extends React.Component {
 
   handleSubmit(event) {
     event.preventDefault()
-    this.props.completeAnOrder(this.state)
+    this.props.completeAnOrder(this.state.updateOrder)
     //this.props.functioname(this.state)
     //this.setstate
     //mapdispatchtoprops - pass in order DONE
@@ -114,7 +114,7 @@ class Checkout extends React.Component {
 
 const mapStateToProps = function(state) {
   return {
-    updateOrder: state.updateOrder,
+    updateOrder: state.updateOrder.updateOrder,
     currentCart: state.cart
   }
 }

@@ -27,6 +27,7 @@ class Routes extends Component {
         <Route exact path="/products/" component={AllProducts} />
         <Route path="/products/:productId" component={singleProductView} />
         <Route path="/checkout" component={Checkout} />
+        <Route path="/checkout/:orderId" component={Checkout} />
         <Route path="/cart" component={Cart} />
         {isLoggedIn && (
           <Switch>

@@ -1,7 +1,7 @@
 const router = require('express').Router()
 const {Order} = require('../db/models')
 
-router.put('/orderId', async (req, res, next) => {
+router.put('/:orderId', async (req, res, next) => {
   try {
     let findOrder = await Order.update(
       {
