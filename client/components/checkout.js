@@ -1,6 +1,7 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import Axios from 'axios'
+import {Link} from 'react-router-dom'
 
 class Checkout extends React.Component {
   constructor(props) {
@@ -13,49 +14,45 @@ class Checkout extends React.Component {
       shippingState: '',
       shippingAddressZipCode: '',
       deliveryMethod: '',
-      total: ''
+      total: this.props.location.state.total,
+      warningMessage: 'required'
     }
     this.handleChange = this.handleChange.bind(this)
-    this.handleSubmit = this.handleSubmit.bind(this)
+    // this.handleSubmit = this.handleSubmit.bind(this)
   }
 
   handleChange(event) {
-    console.log('this is delic=verymethod state', this.state.deliveryMethod)
-    console.log('event name', event.target.name)
-    console.log('value', event.target.value)
+    console.log('this is checkout props', this.props)
     this.setState({
       [event.target.name]: event.target.value
     })
   }
 
-  async handleSubmit(event) {
-    event.preventDefault()
-    // this.props.addNewOrder(this.state)
-    try {
-      const res = await Axios.post('/api/checkout', this.state)
-      this.setState({
-        state: [res.data]
-      })
-    } catch (error) {
-      console.log(
-        'this is a temporary error handle from components.checkout.js',
-        error
-      )
-    }
-
-    // this.setState({
-    //   recipientName: '',
-    //   shippingAddress: '',
-    //   deliveryMethod: ''
-    // })
+  isComplete() {
+    if (
+      !this.state.recipientName ||
+      !this.state.shippingAddressLineOne ||
+      !this.state.shippingCity ||
+      !this.state.shippingState ||
+      !this.state.shippingAddressZipCode ||
+      !this.state.deliveryMethod
+    )
+      return false
+    else return true
   }
+  //mapping to list items
 
   render() {
-    console.log('from checkout', this.props)
+    console.log('this is checkout state', this.state)
+
     return (
-      <form onSubmit={this.handleSubmit}>
+      <form id="checkout_form" onSubmit={this.handleSubmit}>
         <label>
           Recipient Name:
+          {!this.state.recipientName &&
+            this.state.warningMessage && (
+              <span className="warning">{this.state.warningMessage}</span>
+            )}
           <input
             type="text"
             name="recipientName"
@@ -121,11 +118,26 @@ class Checkout extends React.Component {
             <option value="Pick-Up">Pick-Up</option>
           </select>
         </label>
-        <label>Total: {this.props.location.state.total}</label>
-        <button onClick={this.handleSubmit}>Submit</button>
+        <label>Total: {this.state.total}</label>
+        {this.isComplete() ? (
+          <span>Please Enter Required Fields</span>
+        ) : (
+          <Link
+            type="submit"
+            disabled={!this.state.recipientName}
+            to={{pathname: '/confirmation'}}
+            onClick={this.handleSubmit}
+          >
+            Submit Order
+          </Link>
+        )}
       </form>
     )
   }
 }
 
-export default Checkout
+const mapStateToProps = state => ({
+  currentCart: state.cart
+})
+
+export default connect(mapStateToProps)(Checkout)
