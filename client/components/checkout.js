@@ -1,6 +1,6 @@
 import React from 'react'
 import {connect} from 'react-redux'
-import Axios from 'axios'
+import completeAnOrder from '../store'
 
 class Checkout extends React.Component {
   constructor(props) {
@@ -12,42 +12,25 @@ class Checkout extends React.Component {
       shippingCity: '',
       shippingState: '',
       shippingAddressZipCode: '',
-      deliveryMethod: '',
-      total: ''
+      deliveryMethod: ''
     }
     this.handleChange = this.handleChange.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
   }
 
   handleChange(event) {
-    console.log('this is delic=verymethod state', this.state.deliveryMethod)
-    console.log('event name', event.target.name)
-    console.log('value', event.target.value)
     this.setState({
       [event.target.name]: event.target.value
     })
   }
 
-  async handleSubmit(event) {
+  handleSubmit(event) {
     event.preventDefault()
-    // this.props.addNewOrder(this.state)
-    try {
-      const res = await Axios.post('/api/checkout', this.state)
-      this.setState({
-        state: [res.data]
-      })
-    } catch (error) {
-      console.log(
-        'this is a temporary error handle from components.checkout.js',
-        error
-      )
-    }
-
-    // this.setState({
-    //   recipientName: '',
-    //   shippingAddress: '',
-    //   deliveryMethod: ''
-    // })
+    this.props.completeAnOrder(this.state)
+    //this.props.functioname(this.state)
+    //this.setstate
+    //mapdispatchtoprops - pass in order DONE
+    //mapstatetoprops - pass in state
   }
 
   render() {
@@ -128,4 +111,16 @@ class Checkout extends React.Component {
   }
 }
 
-export default Checkout
+const mapStateToProps = function(state) {
+  return {
+    updateOrder: state.updateOrder
+  }
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+    completeAnOrder: updateOrder => dispatch(completeAnOrder(updateOrder))
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Checkout)
