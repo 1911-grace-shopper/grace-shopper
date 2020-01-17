@@ -1,4 +1,5 @@
 import Axios from 'axios'
+import {runInNewContext} from 'vm'
 
 const GET_CART = 'GET_CART'
 const ADD_ITEM_TO_CART = 'ADD_ITEM_TO_CART'
@@ -27,9 +28,10 @@ const addedItem = item => ({
   item: item
 })
 
-const updatedItemCount = itemIndex => ({
+const updatedItemCount = (itemIndex, increment) => ({
   type: UPDATE_COUNT_IN_CART,
-  itemIndex: itemIndex
+  itemIndex: itemIndex,
+  increment: increment
 })
 
 export const addItemToCart = (item, user) => {
@@ -71,8 +73,7 @@ export const addItemToCart = (item, user) => {
       let itemIndex = currentCart.findIndex(
         itemInCart => itemInCart.id === item.id
       )
-      console.log(itemIndex)
-      dispatch(updatedItemCount(itemIndex))
+      dispatch(updatedItemCount(itemIndex, 1))
     } else {
       item.count = 1
 
@@ -87,7 +88,6 @@ export const addItemToCart = (item, user) => {
         productId: item.id
       }
       await Axios.post('/api/carts', newCart)
-      console.log('Pushing!')
       currentCart.push(item)
       sessionStorage.setItem('cart', JSON.stringify(currentCart))
       dispatch(addedItem(item))
@@ -95,21 +95,51 @@ export const addItemToCart = (item, user) => {
   }
 }
 
-export const deletedItem = id => {
-  return dispatch => {
-    currentCart = JSON.parse(sessionStorage.getItem('cart'))
+const itemDeleted = itemId => ({
+  type: REMOVE_ITEM_FROM_CART,
+  itemId: itemId
+})
 
-    //checks if there is more than 1 in the cart
+export const deleteItem = id => {
+  return async dispatch => {
+    let currentCart = JSON.parse(sessionStorage.getItem('cart'))
+    let itemtoDeleteIndex = currentCart.findIndex(
+      itemInCart => itemInCart.id === id
+    )
+    let deletedItem = currentCart[itemtoDeleteIndex]
 
-    //removes item from cart if it has the deleted item id
-    // updatedCart = currentCart.filter(itemInCart => itemInCart.id !== id)
+    try {
+      //if only one in cart
+      if (deletedItem.count <= 1) {
+        let updatedCart = currentCart.filter(item => item.id !== id)
+        sessionStorage.setItem('cart', JSON.stringify(updatedCart))
+
+        dispatch(itemDeleted(deletedItem.id))
+        await Axios.delete(
+          `/api/carts/${deletedItem.orderId}/${deletedItem.id}`
+        )
+      } else {
+        //if there is more than one in the cart
+        currentCart.forEach(async itemInCart => {
+          if (itemInCart.id === id) {
+            itemInCart.count -= 1
+            //if count needs to be updated in order details
+            dispatch(updatedItemCount(itemtoDeleteIndex, -1))
+            await Axios.put(
+              `/api/carts/${itemInCart.orderId}/${itemInCart.id}`,
+              {
+                count: itemInCart.count
+              }
+            )
+          }
+        })
+        sessionStorage.setItem('cart', JSON.stringify(currentCart))
+      }
+    } catch (error) {
+      runInNewContext(error)
+    }
   }
 }
-
-const removedFromCart = id => ({
-  type: REMOVE_ITEM_FROM_CART,
-  id: id
-})
 
 //initial state is the current status of the cart-- if a cart doesn't exist make it an empty array
 const initialState = sessionStorage.getItem('cart')
@@ -123,13 +153,13 @@ const cartReducer = (state = initialState, action) => {
     case ADD_ITEM_TO_CART:
       return state.concat([action.item])
     case UPDATE_COUNT_IN_CART:
-      state[action.itemIndex].count += 1
+      state[action.itemIndex].count += action.increment
       return state
+    case REMOVE_ITEM_FROM_CART:
+      return state.filter(item => item.id !== action.itemId)
     default:
       return state
   }
 }
-
-function findItem(id, cart) {}
 
 export default cartReducer
