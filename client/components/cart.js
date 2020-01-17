@@ -10,6 +10,7 @@ export class Cart extends React.Component {
 
   clickDelete(itemId) {
     this.props.deleteItem(itemId)
+    this.props.getCurrentCart()
   }
 
   render() {

@@ -23,7 +23,10 @@ class AllProducts extends React.Component {
                 >
                   {product.name}
                 </Link>
-                <img className="product_image" src={product.imageUrl} />
+                <img
+                  className="product_image"
+                  src={`/images/${product.imageUrl}`}
+                />
               </li>
             ))}
           </ul>

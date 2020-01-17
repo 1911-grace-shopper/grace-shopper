@@ -1,5 +1,7 @@
 const Sequelize = require('sequelize')
 const db = require('../db')
+const path = require('path')
+const fs = require('fs')
 
 const Product = db.define('product', {
   name: {
@@ -21,12 +23,7 @@ const Product = db.define('product', {
     type: Sequelize.INTEGER
   },
   imageUrl: {
-    type: Sequelize.TEXT,
-    validate: {
-      isUrl: true
-    },
-    defaultValue:
-      'https://cnet2.cbsistatic.com/img/Itk9r30E-trslBillYFr3fXJOQM=/2011/08/31/b2a0ba6d-fdbb-11e2-8c7c-d4ae52e62bcc/UP_house_front_wballoons2.jpg'
+    type: Sequelize.TEXT
   },
   description: {
     type: Sequelize.TEXT
@@ -36,6 +33,18 @@ const Product = db.define('product', {
   },
   quantity: {
     type: Sequelize.INTEGER
+  }
+})
+
+Product.beforeCreate(product => {
+  const imagePath = product.name
+    .toLowerCase()
+    .split(' ')
+    .join('-')
+  if (product.name === '') {
+    product.imageUrl = 'default/main.jpg'
+  } else {
+    product.imageUrl = imagePath + '/main.jpg'
   }
 })
 
