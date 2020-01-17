@@ -3,6 +3,7 @@ import Axios from 'axios'
 const GET_CART = 'GET_CART'
 const ADD_ITEM_TO_CART = 'ADD_ITEM_TO_CART'
 const REMOVE_ITEM_FROM_CART = 'REMOVE_ITEM_FROM_CART'
+const UPDATE_COUNT_IN_CART = 'UPDATE_COUNT_IN_CART'
 
 const gotCart = cart => ({
   type: GET_CART,
@@ -26,6 +27,11 @@ const addedItem = item => ({
   item: item
 })
 
+const updatedItemCount = itemIndex => ({
+  type: UPDATE_COUNT_IN_CART,
+  itemIndex: itemIndex
+})
+
 export const addItemToCart = (item, user) => {
   return async dispatch => {
     let currentCart = []
@@ -33,6 +39,7 @@ export const addItemToCart = (item, user) => {
     //if the cart already exists, carry through current cart
     if (sessionStorage.getItem('cart')) {
       currentCart = JSON.parse(sessionStorage.getItem('cart'))
+      console.log(currentCart, 'CURRENT CART')
     } else {
       //if the cart does not exist
       const newOrder = {
@@ -48,13 +55,7 @@ export const addItemToCart = (item, user) => {
 
     //cart now exists (empty if nothing has been added before)
     //if the item is already in the cart
-    if (
-      currentCart.some(itemInCart => {
-        if (itemInCart.id === item.id) {
-          return true
-        }
-      })
-    ) {
+    if (currentCart.some(itemInCart => itemInCart.id === item.id)) {
       //increases the count of that item
       currentCart.forEach(async itemInCart => {
         if (itemInCart.id === item.id) {
@@ -65,6 +66,13 @@ export const addItemToCart = (item, user) => {
           })
         }
       })
+
+      sessionStorage.setItem('cart', JSON.stringify(currentCart))
+      let itemIndex = currentCart.findIndex(
+        itemInCart => itemInCart.id === item.id
+      )
+      console.log(itemIndex)
+      dispatch(updatedItemCount(itemIndex))
     } else {
       item.count = 1
 
@@ -79,11 +87,11 @@ export const addItemToCart = (item, user) => {
         productId: item.id
       }
       await Axios.post('/api/carts', newCart)
+      console.log('Pushing!')
       currentCart.push(item)
+      sessionStorage.setItem('cart', JSON.stringify(currentCart))
+      dispatch(addedItem(item))
     }
-
-    sessionStorage.setItem('cart', JSON.stringify(currentCart))
-    dispatch(addedItem(item))
   }
 }
 
@@ -114,6 +122,9 @@ const cartReducer = (state = initialState, action) => {
       return action.cart
     case ADD_ITEM_TO_CART:
       return state.concat([action.item])
+    case UPDATE_COUNT_IN_CART:
+      state[action.itemIndex].count += 1
+      return state
     default:
       return state
   }
