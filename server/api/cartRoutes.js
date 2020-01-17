@@ -48,6 +48,19 @@ router.post('/', async (req, res, next) => {
   }
 })
 
+//delete item from cart
+router.delete('/:orderId/:itemId', async (req, res, next) => {
+  const oId = req.params.orderId
+  const pId = req.params.itemId
+  try {
+    orderDetails.destroy({
+      where: {orderId: oId, productId: pId}
+    })
+  } catch (error) {
+    next(error)
+  }
+})
+
 //update order count (quantity)
 router.put('/:orderId/:itemId', async function(req, res, next) {
   const oId = req.params.orderId

@@ -1,5 +1,5 @@
 import React from 'react'
-import {getCart} from '../store/cart'
+import {getCart, deleteItem} from '../store/cart'
 import {connect} from 'react-redux'
 import {Link} from 'react-router-dom'
 
@@ -8,9 +8,15 @@ export class Cart extends React.Component {
     this.props.getCurrentCart()
   }
 
+  clickDelete(itemId) {
+    this.props.deleteItem(itemId)
+    this.props.getCurrentCart()
+  }
+
   render() {
     const itemsInCart = this.props.currentCart
     let total = Number(0)
+    console.log(this.props)
 
     return (
       <div>
@@ -22,6 +28,13 @@ export class Cart extends React.Component {
               <li>Unit Price: ${item.price}</li>
               <li>Total: {item.price * item.count}</li>
               <li>Quantity: {item.count}</li>
+              <button
+                onClick={() => {
+                  this.clickDelete(item.id)
+                }}
+              >
+                Remove (1) From Cart
+              </button>
             </ul>
           )
         })}
@@ -42,6 +55,9 @@ const mapDispatchToProps = dispatch => {
   return {
     getCurrentCart: () => {
       dispatch(getCart())
+    },
+    deleteItem: itemId => {
+      dispatch(deleteItem(itemId))
     }
   }
 }
