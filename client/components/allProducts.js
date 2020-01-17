@@ -1,7 +1,10 @@
 import React from 'react'
 import {connect} from 'react-redux'
-import {getProductsFromServer} from '../store/productReducer'
-import {Link} from 'react-router-dom'
+import {
+  getProductsFromServer,
+  getOneProductFromServer
+} from '../store/productReducer'
+import {Link, withRouter} from 'react-router-dom'
 
 class AllProducts extends React.Component {
   componentDidMount() {
@@ -9,7 +12,6 @@ class AllProducts extends React.Component {
   }
 
   render() {
-    console.log('THIS IS ALL', this.props)
     return (
       <div>
         <h2>All Products</h2>
@@ -18,8 +20,8 @@ class AllProducts extends React.Component {
             {this.props.products.map(product => (
               <li key={product.id}>
                 <Link
-                  onClick={() => this.props.goToProductDetail(product.id)}
-                  to={'/products/' + product.id}
+                  onClick={() => this.props.displaySingleProduct(product.id)}
+                  to={`/${product.id}`}
                 >
                   {product.name}
                 </Link>
@@ -41,11 +43,15 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = (dispatch, ownProps) => {
+  const history = ownProps.history
   return {
     getProductsFromServer: () => dispatch(getProductsFromServer()),
-    goToProductDetail: productId =>
-      ownProps.history.push(`products/${productId}`)
+    displaySingleProduct: productId => {
+      getOneProductFromServer(productId, history)
+    }
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(AllProducts)
+export default withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(AllProducts)
+)

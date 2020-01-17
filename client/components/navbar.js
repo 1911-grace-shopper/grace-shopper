@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {Fragment} from 'react'
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
 import {Link} from 'react-router-dom'
@@ -6,24 +6,26 @@ import {logout} from '../store'
 
 const Navbar = ({handleClick, isLoggedIn}) => (
   <div>
-    <h1>MADE TINY</h1>
+    <Link to="/">
+      <h1>MADE TINY</h1>
+    </Link>
     <nav>
+      <Link to="/cart">Cart</Link>
       {isLoggedIn ? (
-        <div>
+        <Fragment>
           {/* The navbar will show these links after you log in */}
           <Link to="/home">Home</Link>
           <a href="#" onClick={handleClick}>
             Logout
           </a>
-        </div>
+        </Fragment>
       ) : (
-        <div>
+        <Fragment>
           {/* The navbar will show these links before you log in */}
           <Link to="/login">Login</Link>
           <Link to="/signup">Sign Up</Link>
-        </div>
+        </Fragment>
       )}
-      <Link to="/cart">Cart</Link>
     </nav>
     <hr />
   </div>
