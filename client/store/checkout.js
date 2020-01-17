@@ -10,7 +10,7 @@ const completeCheckout = updateOrder => ({
 export const completeAnOrder = form => async dispatch => {
   try {
     console.log('COMPLETE ORDER THUNK', form.orderId)
-    const res = await Axios.put(`/api/carts/${form.orderId}`, form)
+    const res = await Axios.put(`/api/checkout/${form.orderId}`, form)
 
     // console.log(
     //   'this is from the complete an order thunk',

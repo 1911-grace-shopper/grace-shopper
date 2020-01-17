@@ -13,7 +13,7 @@ router.put('/:orderId', async (req, res, next) => {
         shippingAddressZipCode: req.body.shippingAddressZipCode,
         recipientName: req.body.recipientName,
         total: req.body.total,
-        orderComplete: req.body.total
+        orderComplete: true
       },
       {
         where: {

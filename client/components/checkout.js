@@ -17,7 +17,6 @@ class Checkout extends React.Component {
       shippingAddressZipCode: '',
       deliveryMethod: '',
       total: this.props.location.state.total,
-      orderComplete: true,
       warningMessage: 'required'
     }
     this.handleChange = this.handleChange.bind(this)
@@ -58,6 +57,7 @@ class Checkout extends React.Component {
   //mapping to list items
 
   render() {
+    console.log('this is from just checkout', this.props)
     return (
       <div>
         <div>
