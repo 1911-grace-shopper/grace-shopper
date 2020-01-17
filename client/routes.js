@@ -29,7 +29,7 @@ class Routes extends Component {
         <Route path="/products/:productId" component={singleProductView} />
         <Route path="/checkout" component={Checkout} />
         <Route path="/cart" component={Cart} />
-        <Route path="/confirmation" component={Confirmation} />
+        <Route exact path="/confirmation" component={Confirmation} />
         {isLoggedIn && (
           <Switch>
             {/* Routes placed here are only available after logging in */}

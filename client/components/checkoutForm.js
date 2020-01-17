@@ -1,5 +1,6 @@
 import React from 'react'
 import {Link} from 'react-router-dom'
+import Confirmation from './confirmation'
 
 const Form = props => (
   console.log('from checkout form', props),
@@ -83,8 +84,9 @@ const Form = props => (
         <Link
           type="submit"
           disabled={!props.recipientName}
-          to={{pathname: '/confirmation'}}
+          to="/confirmation"
           onClick={e => props.handleSubmit(e)}
+          render={<Confirmation />}
         >
           Submit Order
         </Link>

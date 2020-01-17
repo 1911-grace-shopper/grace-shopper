@@ -21,6 +21,7 @@ class Checkout extends React.Component {
     this.handleChange = this.handleChange.bind(this)
     this.isComplete = this.isComplete.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
+    this.redirectToTarget = this.redirectToTarget.bind(this)
   }
 
   handleChange(event) {
@@ -33,6 +34,11 @@ class Checkout extends React.Component {
     console.log('this is handle submit', this.state)
     event.preventDefault()
     this.props.completeAnOrder(this.state)
+    this.redirectToTarget()
+  }
+
+  redirectToTarget = () => {
+    this.props.history.push('/confirmation')
   }
 
   isComplete() {
