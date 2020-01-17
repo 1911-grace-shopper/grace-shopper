@@ -5,7 +5,7 @@ import {composeWithDevTools} from 'redux-devtools-extension'
 import user from './user'
 import products from './productReducer'
 import cart from './cart'
-import updateOrder from './checkout'
+import updateOrder from './checkoutReducer'
 
 const reducer = combineReducers({user, products, cart, updateOrder})
 const middleware = composeWithDevTools(

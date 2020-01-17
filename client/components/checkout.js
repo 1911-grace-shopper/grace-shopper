@@ -1,8 +1,7 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import Form from './checkoutForm'
-import {completeAnOrder} from '../store/checkout'
-import Axios from 'axios'
+import {completeAnOrder} from '../store/checkoutReducer'
 
 class Checkout extends React.Component {
   constructor(props) {
@@ -34,12 +33,6 @@ class Checkout extends React.Component {
     console.log('this is handle submit', this.state)
     event.preventDefault()
     this.props.completeAnOrder(this.state)
-    // try {
-    //   const {data}= await Axios.put(`/api/checkout/${this.props.cart[0].orderId}`, this.state)
-    // }
-    // catch (error) {
-    //   console.log(error)
-    // }
   }
 
   isComplete() {
@@ -93,8 +86,8 @@ const mapStateToProps = function(state) {
 
 const mapDispatchToProps = dispatch => {
   return {
-    completeAnOrder: form => dispatch(completeAnOrder(form)),
-    handleSubmit: () => dispatch(completeAnOrder())
+    completeAnOrder: form => dispatch(completeAnOrder(form))
+    // handleSubmit: () => dispatch(completeAnOrder())
   }
 }
 
