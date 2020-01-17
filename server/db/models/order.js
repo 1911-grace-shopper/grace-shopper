@@ -3,8 +3,8 @@ const db = require('../db')
 
 const Order = db.define('order', {
   orderComplete: {
-    type: Sequelize.BOOLEAN,
-    defaultValue: false
+    type: Sequelize.BOOLEAN
+    // defaultValue: false
   },
   deliveryMethod: {
     type: Sequelize.ENUM('Delivery', 'Pick-Up')
