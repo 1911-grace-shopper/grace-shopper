@@ -2,34 +2,31 @@ import Axios from 'axios'
 
 const COMPLETE_CHECKOUT = 'COMPLETE_CHECKOUT'
 
-const initialState = {
-  updateOrder: []
-}
-
 const completeCheckout = updateOrder => ({
   type: COMPLETE_CHECKOUT,
   updateOrder
 })
 
-export const completeAnOrder = updateOrder => async dispatch => {
+export const completeAnOrder = form => async dispatch => {
   try {
-    console.log('!!! this works', updateOrder)
-    const res = await Axios.put(
-      `/api/checkout/${updateOrder.currentCart.orderId}`,
-      updateOrder
-    )
+    console.log('COMPLETE ORDER THUNK', form.orderId)
+    const res = await Axios.put(`/api/carts/${form.orderId}`, form)
 
-    console.log(
-      'this is from the complete an order thunk',
-      res.data,
-      updateOrder
-    )
+    // console.log(
+    //   'this is from the complete an order thunk',
+    //   res.data,
+    //   form
+    // )
 
     const info = res.data
     dispatch(completeCheckout(info))
   } catch (err) {
     console.log('This is from the completeOrder thunk', err)
   }
+}
+
+const initialState = {
+  updateOrder: []
 }
 
 const checkoutReducer = (state = initialState, action) => {
