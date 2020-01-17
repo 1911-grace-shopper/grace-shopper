@@ -1,7 +1,7 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import Form from './checkoutForm'
-import completeAnOrder from '../store/checkout'
+import {completeAnOrder} from '../store/checkout'
 import Axios from 'axios'
 
 class Checkout extends React.Component {
@@ -32,7 +32,7 @@ class Checkout extends React.Component {
   }
 
   handleSubmit(event) {
-    console.log('this is handle submit', this.props)
+    console.log('this is handle submit', this.state)
     event.preventDefault()
     this.props.completeAnOrder(this.state)
     // try {
@@ -58,8 +58,6 @@ class Checkout extends React.Component {
   //mapping to list items
 
   render() {
-    console.log('this is SESSIONSTORAGE', sessionStorage)
-
     return (
       <div>
         <div>
@@ -95,7 +93,8 @@ const mapStateToProps = function(state) {
 
 const mapDispatchToProps = dispatch => {
   return {
-    completeAnOrder: updateOrder => dispatch(completeAnOrder(updateOrder))
+    completeAnOrder: form => dispatch(completeAnOrder(form)),
+    handleSubmit: () => dispatch(completeAnOrder())
   }
 }
 
