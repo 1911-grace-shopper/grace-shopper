@@ -29,12 +29,13 @@ class Routes extends Component {
       <Switch>
         {/* Routes placed here are available to all visitors */}
         <Route exact path="/" component={AllProducts} />
-        <Route exact path="/:productId" component={SingleProduct} />
-        <Route exact path="/login" component={Login} />
-        <Route exact path="/signup" component={Signup} />
-        <Route exact path="/confirmation" component={Confirmation} />
-        <Route exact path="/checkout" component={Checkout} />
-        <Route exact path="/cart" component={Cart} />
+
+        <Route path="/login" component={Login} />
+        <Route path="/signup" component={Signup} />
+        <Route path="/cart" component={Cart} />
+        <Route path="/checkout" component={Checkout} />
+        <Route path="/confirmation" component={Confirmation} />
+        <Route path="/:productId" component={SingleProduct} />
 
         {isLoggedIn && (
           <Switch>

@@ -2,36 +2,35 @@ import React from 'react'
 import {connect} from 'react-redux'
 import {
   getProductsFromServer,
-  getOneProductFromServer
+  getSingleProductFromServer
 } from '../store/productReducer'
 import {Link, withRouter} from 'react-router-dom'
 
 class AllProducts extends React.Component {
   componentDidMount() {
-    this.props.getProductsFromServer()
+    this.props.getProducts()
   }
 
   render() {
+    console.log('ALL PRODUCTS', this.props)
     return (
       <div>
         <h2>All Products</h2>
         <div className="all_products">
-          <ul className="product_list">
-            {this.props.products.map(product => (
-              <li key={product.id}>
-                <Link
-                  onClick={() => this.props.displaySingleProduct(product.id)}
-                  to={`/${product.id}`}
-                >
-                  {product.name}
-                </Link>
-                <img
-                  className="product_image"
-                  src={`/images/${product.imageUrl}`}
-                />
-              </li>
-            ))}
-          </ul>
+          {this.props.products.map(product => (
+            <div key={product.id} className="product_list">
+              <img
+                className="product_image"
+                src={`/images/${product.imageUrl}`}
+              />
+              <Link
+                to={`/${product.id}`}
+                onClick={() => this.props.getSingleProduct(product.id)}
+              >
+                <h3>{product.name}</h3>
+              </Link>
+            </div>
+          ))}
         </div>
       </div>
     )
@@ -45,9 +44,10 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = (dispatch, ownProps) => {
   const history = ownProps.history
   return {
-    getProductsFromServer: () => dispatch(getProductsFromServer()),
-    displaySingleProduct: productId => {
-      getOneProductFromServer(productId, history)
+    getProducts: () => dispatch(getProductsFromServer()),
+    getSingleProduct: productId => {
+      getSingleProductFromServer(productId)
+      //history.push(`/${productId}`)
     }
   }
 }

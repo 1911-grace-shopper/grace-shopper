@@ -1,13 +1,13 @@
 import React, {Fragment} from 'react'
 import {connect} from 'react-redux'
-import {getOneProductFromServer} from '../store/productReducer'
+import {getSingleProductFromServer} from '../store/productReducer'
 import {addItemToCart} from '../store/cart'
 
 class SingleProduct extends React.Component {
   componentDidMount() {
     if (!this.props.selectedProduct.id) {
       const productId = this.props.match.params.productId
-      this.props.getOneProductFromServer(productId)
+      this.props.getSingleProductFromServer(productId)
     }
   }
 
@@ -26,7 +26,7 @@ class SingleProduct extends React.Component {
       bathrooms,
       description
     } = this.props.selectedProduct
-
+    console.log('SINGLE PRODUCT:', this.props)
     return (
       <div>
         <h2> {name} </h2>
@@ -60,8 +60,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    getOneProductFromServer: productId =>
-      dispatch(getOneProductFromServer(productId)),
+    getSingleProductFromServer: productId =>
+      dispatch(getSingleProductFromServer(productId)),
     addToCart: (item, user) => {
       console.log('addToCart', ownProps)
       dispatch(addItemToCart(item, user))
