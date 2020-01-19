@@ -63,7 +63,7 @@ class Checkout extends React.Component {
           {this.props.currentCart.map(item => {
             return (
               <ul key={item.id}>
-                <li>{item.imageUrl}</li>
+                <img className="preview" src={`/images/${item.imageUrl}`} />
                 <li>{item.name}</li>
                 <li>Unit Price: ${item.price}</li>
                 <li>Quantity: {item.count}</li>

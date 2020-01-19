@@ -24,6 +24,7 @@ export class Cart extends React.Component {
           total += Number(item.price * item.count)
           return (
             <ul key={item.id} className="cartItem">
+              <img className="preview" src={`/images/${item.imageUrl}`} />
               <li>{item.name}</li>
               <li>Unit Price: ${item.price}</li>
               <li>Total: {item.price * item.count}</li>
