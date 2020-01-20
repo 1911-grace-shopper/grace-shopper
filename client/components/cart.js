@@ -8,15 +8,15 @@ export class Cart extends React.Component {
     this.props.getCurrentCart()
   }
 
-  clickDelete(itemId) {
-    this.props.deleteItem(itemId)
-    this.props.getCurrentCart()
+  clickDelete(item) {
+    this.props.deleteItem(item)
+    // this.props.getCurrentCart()
   }
 
   render() {
     const itemsInCart = this.props.currentCart
     let total = Number(0)
-    console.log(this.props)
+    console.log(this.props.currentCart, 'CART PROPS')
 
     return (
       <div>
@@ -26,11 +26,11 @@ export class Cart extends React.Component {
             <ul key={item.id} className="cartItem">
               <li>{item.name}</li>
               <li>Unit Price: ${item.price}</li>
-              <li>Total: {item.price * item.count}</li>
+              <li>Total: ${Number(item.price) * Number(item.count)}</li>
               <li>Quantity: {item.count}</li>
               <button
                 onClick={() => {
-                  this.clickDelete(item.id)
+                  this.clickDelete(item)
                 }}
               >
                 Remove (1) From Cart
@@ -56,8 +56,8 @@ const mapDispatchToProps = dispatch => {
     getCurrentCart: () => {
       dispatch(getCart())
     },
-    deleteItem: itemId => {
-      dispatch(deleteItem(itemId))
+    deleteItem: item => {
+      dispatch(deleteItem(item))
     }
   }
 }

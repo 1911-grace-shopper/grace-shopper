@@ -1,5 +1,4 @@
 import Axios from 'axios'
-import {runInNewContext} from 'vm'
 
 const GET_CART = 'GET_CART'
 const ADD_ITEM_TO_CART = 'ADD_ITEM_TO_CART'
@@ -12,14 +11,20 @@ const gotCart = cart => ({
 })
 
 export const getCart = () => {
-  return dispatch => {
-    let cart = []
+  return async dispatch => {
+    let cartId
+    //if user logged in ->set cartId to their cart
 
-    if (sessionStorage.getItem('cart')) {
-      cart = JSON.parse(sessionStorage.getItem('cart'))
+    if (sessionStorage.getItem('cartId')) {
+      cartId = JSON.parse(sessionStorage.getItem('cartId'))
+      const {data} = await Axios.get(`/api/carts/${cartId}`)
+      let cart = data
+      cart.forEach(item => {
+        item.count = item.orderDetails.count
+        item.orderId = cartId
+      })
+      dispatch(gotCart(cart))
     }
-
-    dispatch(gotCart(cart))
   }
 }
 
@@ -28,20 +33,18 @@ const addedItem = item => ({
   item: item
 })
 
-const updatedItemCount = (itemIndex, increment) => ({
+const updatedItemCount = (itemId, increment) => ({
   type: UPDATE_COUNT_IN_CART,
-  itemIndex: itemIndex,
+  itemId: itemId,
   increment: increment
 })
 
 export const addItemToCart = (item, user) => {
   return async dispatch => {
-    let currentCart = []
-
+    let cartId
     //if the cart already exists, carry through current cart
-    if (sessionStorage.getItem('cart')) {
-      currentCart = JSON.parse(sessionStorage.getItem('cart'))
-      console.log(currentCart, 'CURRENT CART')
+    if (sessionStorage.getItem('cartId')) {
+      cartId = JSON.parse(sessionStorage.getItem('cartId'))
     } else {
       //if the cart does not exist
       const newOrder = {
@@ -52,44 +55,40 @@ export const addItemToCart = (item, user) => {
       const {data} = await Axios.post('/api/checkout', newOrder)
 
       //gives the new cart item an order Id
-      item.orderId = data.id
+      cartId = data.id
     }
+
+    //retrieve cart
+    let currentCart = await Axios.get(`/api/carts/${cartId}`)
 
     //cart now exists (empty if nothing has been added before)
     //if the item is already in the cart
-    if (currentCart.some(itemInCart => itemInCart.id === item.id)) {
+    if (currentCart.data.some(itemInCart => itemInCart.id === item.id)) {
       //increases the count of that item
-      currentCart.forEach(async itemInCart => {
+      currentCart.data.forEach(async itemInCart => {
         if (itemInCart.id === item.id) {
-          itemInCart.count += 1
-          //if count needs to be updated in order details
-          await Axios.put(`/api/carts/${itemInCart.orderId}/${itemInCart.id}`, {
-            count: itemInCart.count
+          //update count in order details
+          await Axios.put(`/api/carts/${cartId}/${itemInCart.id}`, {
+            count: itemInCart.orderDetails.count + 1
           })
         }
       })
 
-      sessionStorage.setItem('cart', JSON.stringify(currentCart))
-      let itemIndex = currentCart.findIndex(
-        itemInCart => itemInCart.id === item.id
-      )
-      dispatch(updatedItemCount(itemIndex, 1))
+      sessionStorage.setItem('cartId', JSON.stringify(cartId))
+
+      dispatch(updatedItemCount(item.id, 1))
     } else {
-      item.count = 1
-
-      if (!item.orderId) {
-        item.orderId = currentCart[0].orderId
-      }
-
       let newCart = {
         priceAtPurchase: item.price,
-        count: item.count,
-        orderId: item.orderId,
+        count: 1,
+        orderId: cartId,
         productId: item.id
       }
       await Axios.post('/api/carts', newCart)
-      currentCart.push(item)
-      sessionStorage.setItem('cart', JSON.stringify(currentCart))
+      sessionStorage.setItem('cartId', JSON.stringify(cartId))
+
+      item.count = 1
+      item.orderId = cartId
       dispatch(addedItem(item))
     }
   }
@@ -100,51 +99,43 @@ const itemDeleted = itemId => ({
   itemId: itemId
 })
 
-export const deleteItem = id => {
+export const deleteItem = item => {
   return async dispatch => {
-    let currentCart = JSON.parse(sessionStorage.getItem('cart'))
-    let itemtoDeleteIndex = currentCart.findIndex(
-      itemInCart => itemInCart.id === id
+    let cartId = JSON.parse(sessionStorage.getItem('cartId'))
+    let currentCart = await Axios.get(`/api/carts/${cartId}`)
+    let itemtoDelete = currentCart.data.filter(
+      itemInCart => itemInCart.id === item.id
     )
-    let deletedItem = currentCart[itemtoDeleteIndex]
+    let deletedItem = itemtoDelete[0]
 
     try {
       //if only one in cart
       if (deletedItem.count <= 1) {
-        let updatedCart = currentCart.filter(item => item.id !== id)
-        sessionStorage.setItem('cart', JSON.stringify(updatedCart))
+        //let updatedCart = currentCart.filter(item => item.id !== id)
 
         dispatch(itemDeleted(deletedItem.id))
-        await Axios.delete(
-          `/api/carts/${deletedItem.orderId}/${deletedItem.id}`
-        )
+        await Axios.delete(`/api/carts/${cartId}/${deletedItem.id}`)
       } else {
         //if there is more than one in the cart
         currentCart.forEach(async itemInCart => {
           if (itemInCart.id === id) {
             itemInCart.count -= 1
             //if count needs to be updated in order details
-            dispatch(updatedItemCount(itemtoDeleteIndex, -1))
-            await Axios.put(
-              `/api/carts/${itemInCart.orderId}/${itemInCart.id}`,
-              {
-                count: itemInCart.count
-              }
-            )
+            dispatch(updatedItemCount(id, -1))
+            await Axios.put(`/api/carts/${cartId}/${id}`, {
+              count: itemInCart.count
+            })
           }
         })
-        sessionStorage.setItem('cart', JSON.stringify(currentCart))
       }
     } catch (error) {
-      runInNewContext(error)
+      console.log('Delete Error')
     }
   }
 }
 
-//initial state is the current status of the cart-- if a cart doesn't exist make it an empty array
-const initialState = sessionStorage.getItem('cart')
-  ? JSON.parse(sessionStorage.getItem('cart'))
-  : []
+//initial state is an empty cart
+const initialState = []
 
 const cartReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -153,7 +144,11 @@ const cartReducer = (state = initialState, action) => {
     case ADD_ITEM_TO_CART:
       return state.concat([action.item])
     case UPDATE_COUNT_IN_CART:
-      state[action.itemIndex].count += action.increment
+      state.forEach(item => {
+        if (item.id === action.itemId) {
+          item.count += action.increment
+        }
+      })
       return state
     case REMOVE_ITEM_FROM_CART:
       return state.filter(item => item.id !== action.itemId)
