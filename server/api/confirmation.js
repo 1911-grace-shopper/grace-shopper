@@ -1,28 +1,16 @@
 const router = require('express').Router()
-const {Order} = require('../db/models')
+const {Order, orderDetails} = require('../db/models')
 
-router.get('/:orderId', async (req, res, next) => {
+router.get('/confirmation/:myOrder', async (req, res, next) => {
   try {
-    let findOrder = await Order.update(
-      {
-        deliveryMethod: req.body.deliveryMethod,
-        shippingAddressLineOne: req.body.shippingAddressLineOne,
-        shippingAddressLineTwo: req.body.shippingAddressLineTwo,
-        shippingCity: req.body.shippingCity,
-        shippingState: req.body.shippingState,
-        shippingAddressZipCode: req.body.shippingAddressZipCode,
-        recipientName: req.body.recipientName,
-        total: req.body.total,
-        orderComplete: true
-      },
-      {
-        where: {
-          id: req.params.orderId
-        }
-      }
-    )
-    res.json(findOrder)
+    console.log('CONFIRMATION PARAMS', req.params)
+    let confirmedOrder = await Order.findById(req.match.params.myOrder, {
+      include: orderDetails
+    })
+    res.json(confirmedOrder)
   } catch (err) {
     next(err)
   }
 })
+
+module.exports = router

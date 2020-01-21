@@ -38,7 +38,7 @@ class Checkout extends React.Component {
   }
 
   redirectToTarget = () => {
-    this.props.history.push('/confirmation')
+    this.props.history.push(`/confirmation/${this.state.orderId}`)
   }
 
   isComplete() {
@@ -56,7 +56,6 @@ class Checkout extends React.Component {
   //mapping to list items
 
   render() {
-    console.log('this is from just checkout', this.props)
     return (
       <div>
         <div>
