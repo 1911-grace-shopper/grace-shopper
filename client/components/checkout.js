@@ -1,7 +1,7 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import Form from './checkoutForm'
-import {completeAnOrder} from '../store/checkoutReducer'
+import {completeAnOrder} from '../store/cart'
 import displayDollars from './helper'
 
 class Checkout extends React.Component {
@@ -17,7 +17,7 @@ class Checkout extends React.Component {
       shippingAddressZipCode: '',
       deliveryMethod: '',
       total: this.props.location.state.total,
-      warningMessage: 'required'
+      warningMessage: '*'
     }
     this.handleChange = this.handleChange.bind(this)
     this.isComplete = this.isComplete.bind(this)
@@ -32,10 +32,9 @@ class Checkout extends React.Component {
   }
 
   handleSubmit(event) {
-    console.log('this is handle submit', this.state)
     event.preventDefault()
     this.props.completeAnOrder(this.state)
-    this.redirectToTarget()
+    // this.redirectToTarget()
   }
 
   redirectToTarget = () => {
@@ -57,7 +56,6 @@ class Checkout extends React.Component {
   //mapping to list items
 
   render() {
-    console.log('this is from just checkout', this.props)
     return (
       <div>
         <div>
@@ -66,7 +64,7 @@ class Checkout extends React.Component {
               <ul key={item.id}>
                 <img className="preview" src={`/images/${item.imageUrl}`} />
                 <li>{item.name}</li>
-                <li>Unit Price: ${item.price}</li>
+                <li>Unit Price:{displayDollars(item.price)}</li>
                 <li>Quantity: {item.count}</li>
               </ul>
             )
@@ -85,16 +83,15 @@ class Checkout extends React.Component {
 }
 
 const mapStateToProps = function(state) {
+  console.log('CHECKOUT MSTP', state.cart)
   return {
-    updateOrder: state.updateOrder.updateOrder,
     currentCart: state.cart
   }
 }
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    completeAnOrder: form => dispatch(completeAnOrder(form))
-    // handleSubmit: () => dispatch(completeAnOrder())
+    completeAnOrder: form => dispatch(completeAnOrder(form, ownProps.history))
   }
 }
 
