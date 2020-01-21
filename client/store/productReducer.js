@@ -25,9 +25,10 @@ export const getProductsFromServer = () => async dispatch => {
 
 export const getSingleProductFromServer = productId => async dispatch => {
   try {
-    const res = await Axios.get(`/api/products/${productId}`)
-    const action = getSingleProduct(res.data)
-    dispatch(action)
+    let product = await Axios.get(`/api/products/${productId}`)
+    const images = await Axios.get(`/images/${product.data.imageFilePath}`)
+    product.data.images = images.data
+    dispatch(getSingleProduct(product.data))
   } catch (err) {
     console.log(err)
   }
