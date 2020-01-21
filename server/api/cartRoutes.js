@@ -1,5 +1,5 @@
 const router = require('express').Router()
-const {orderDetails} = require('../db/models')
+const {orderDetails, Product, Order} = require('../db/models')
 
 //all orders
 router.get('', async (req, res, next) => {
@@ -11,14 +11,20 @@ router.get('', async (req, res, next) => {
   }
 })
 
-//specific order
+//specific order (cart)
 router.get('/:orderId', async (req, res, next) => {
-  const id = req.params.orderId
+  const id = Number(req.params.orderId)
+  console.log(id, 'ID In BackEND')
+
   try {
-    const order = await orderDetails.findOne({
-      where: {orderId: id}
+    const order = await Order.findOne({
+      where: {id: id},
+      include: [{model: Product}]
     })
-    res.json(order)
+
+    let cart = order.products
+
+    res.json(cart)
   } catch (error) {
     next(error)
   }
@@ -26,8 +32,8 @@ router.get('/:orderId', async (req, res, next) => {
 
 //specific item in specific order
 router.get('/:orderId/:itemId', async (req, res, next) => {
-  const oId = req.params.orderId
-  const pId = req.params.itemId
+  const oId = Number(req.params.orderId)
+  const pId = Number(req.params.itemId)
   try {
     const order = await orderDetails.findOne({
       where: {orderId: oId, productId: pId}
@@ -39,9 +45,10 @@ router.get('/:orderId/:itemId', async (req, res, next) => {
 })
 
 //add a new order
-router.post('/', async (req, res, next) => {
+router.post('', async (req, res, next) => {
   try {
     let newOrder = await orderDetails.create(req.body)
+    console.log(newOrder, 'NEW ORDER')
     res.json(newOrder)
   } catch (err) {
     next(err)

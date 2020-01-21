@@ -2,6 +2,7 @@ import React from 'react'
 import {connect} from 'react-redux'
 import Form from './checkoutForm'
 import {completeAnOrder} from '../store/checkoutReducer'
+import displayDollars from './helper'
 
 class Checkout extends React.Component {
   constructor(props) {

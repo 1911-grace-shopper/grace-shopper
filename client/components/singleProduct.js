@@ -4,6 +4,7 @@ import {getSingleProductFromServer} from '../store/productReducer'
 import {addItemToCart} from '../store/cart'
 import ImageSlides from './imageSlides'
 import {Grid, Typography, Button} from '@material-ui/core'
+import displayDollars from './helper'
 
 class SingleProduct extends React.Component {
   componentDidMount() {
@@ -42,7 +43,9 @@ class SingleProduct extends React.Component {
         )}
         <Grid item sm={6}>
           <Typography variant="h4"> {name} </Typography>
-          <Typography variant="subtitle1">Price: {price}</Typography>
+          <Typography variant="subtitle1">
+            Price: {displayDollars(price)}
+          </Typography>
           <Typography variant="subtitle1">Width: {width} ft</Typography>
           <Typography variant="subtitle1">Length: {length} ft</Typography>
           <Typography variant="subtitle1">Sleeps: {beds}</Typography>
