@@ -63,6 +63,8 @@ router.delete('/:orderId/:itemId', async (req, res, next) => {
     orderDetails.destroy({
       where: {orderId: oId, productId: pId}
     })
+
+    res.send('success')
   } catch (error) {
     next(error)
   }
@@ -82,6 +84,7 @@ router.put('/:orderId/:itemId', async function(req, res, next) {
         returning: true
       }
     )
+    res.send('boop')
   } catch (error) {
     next(error)
   }
