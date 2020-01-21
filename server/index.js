@@ -40,6 +40,10 @@ passport.deserializeUser(async (id, done) => {
   }
 })
 
+// const isAdmin = (req) => {
+//   if(!req.body.isAdmin) thro
+// }
+
 const createApp = () => {
   // logging middleware
   app.use(morgan('dev'))
