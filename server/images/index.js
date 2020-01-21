@@ -25,9 +25,6 @@ router.get('/:productName', async (req, res, next) => {
     // get image file names from file directory
 
     const productName = req.params.productName
-      .toLowerCase()
-      .split(' ')
-      .join('-')
 
     fs.readdir(
       path.join(__dirname, '../..', `public/images/${productName}`),
@@ -39,9 +36,8 @@ router.get('/:productName', async (req, res, next) => {
         if (files) {
           let images = []
           files.forEach(file => {
-            const imagePath = `${productName}${file}`
-            if (file === 'main.jpg') images.unshift(imagePath)
-            else images.push(imagePath)
+            if (file === 'main.jpg') images.unshift(file)
+            else images.push(file)
           })
           res.send(images)
         }
