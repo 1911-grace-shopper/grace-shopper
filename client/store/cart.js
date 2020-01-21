@@ -106,26 +106,25 @@ export const deleteItem = item => {
     let itemtoDelete = currentCart.data.filter(
       itemInCart => itemInCart.id === item.id
     )
+
     let deletedItem = itemtoDelete[0]
 
     try {
       //if only one in cart
-      if (deletedItem.count <= 1) {
+      if (deletedItem.orderDetails.count <= 1) {
         //let updatedCart = currentCart.filter(item => item.id !== id)
 
-        dispatch(itemDeleted(deletedItem.id))
-        await Axios.delete(`/api/carts/${cartId}/${deletedItem.id}`)
+        dispatch(itemDeleted(item.id))
+        await Axios.delete(`/api/carts/${cartId}/${item.id}`)
       } else {
         //if there is more than one in the cart
-        currentCart.forEach(async itemInCart => {
-          if (itemInCart.id === id) {
-            itemInCart.count -= 1
-            //if count needs to be updated in order details
-            dispatch(updatedItemCount(id, -1))
-            await Axios.put(`/api/carts/${cartId}/${id}`, {
-              count: itemInCart.count
-            })
-          }
+        // currentCart.forEach(async itemInCart => {
+        //   if (itemInCart.id === id) {
+
+        //if count needs to be updated in order details
+        dispatch(updatedItemCount(item.id, -1))
+        await Axios.put(`/api/carts/${cartId}/${item.id}`, {
+          count: deletedItem.orderDetails.count - 1
         })
       }
     } catch (error) {
@@ -142,6 +141,7 @@ const cartReducer = (state = initialState, action) => {
     case GET_CART:
       return action.cart
     case ADD_ITEM_TO_CART:
+      console.log(state, 'STATE')
       return state.concat([action.item])
     case UPDATE_COUNT_IN_CART:
       state.forEach(item => {
