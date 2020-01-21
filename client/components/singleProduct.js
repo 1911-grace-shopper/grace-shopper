@@ -2,13 +2,13 @@ import React, {Fragment} from 'react'
 import {connect} from 'react-redux'
 import {getSingleProductFromServer} from '../store/productReducer'
 import {addItemToCart} from '../store/cart'
+import ImageSlides from './imageSlides'
+import {Grid, Typography, Button} from '@material-ui/core'
 
 class SingleProduct extends React.Component {
   componentDidMount() {
-    if (!this.props.selectedProduct.id) {
-      const productId = this.props.match.params.productId
-      this.props.getSingleProductFromServer(productId)
-    }
+    const productId = this.props.match.params.productId
+    this.props.getSingleProduct(productId)
   }
 
   clickAdd(item, user) {
@@ -18,36 +18,45 @@ class SingleProduct extends React.Component {
   render() {
     const {
       name,
-      imageUrl,
+      imageFilePath,
+      images,
       price,
       length,
       width,
       beds,
-      bathrooms,
       description
     } = this.props.selectedProduct
-    console.log('SINGLE PRODUCT:', this.props)
+    console.log('SINGLE PRODUCT:', this.props.selectedProduct)
     return (
-      <div>
-        <h2> {name} </h2>
-        <img src={`/images/${imageUrl}`} />
-        <p>Price: {price}</p>
-        <p>
-          Square Feet:
-          {length * width}
-        </p>
-        <p>Number of Bedrooms: {beds}</p>
-        <p>Number of Bathrooms: {bathrooms}</p>
-        <p>Description: {description}</p>
-
-        <button
-          onClick={() => {
-            this.props.addToCart(this.props.selectedProduct, this.props.user)
-          }}
-        >
-          BUY ME!
-        </button>
-      </div>
+      <Grid
+        container
+        justify="space-around"
+        alignItems="center"
+        spacing={4}
+        className="main"
+      >
+        {images && (
+          <Grid item sm={6}>
+            <ImageSlides images={images} imageFilePath={imageFilePath} />
+          </Grid>
+        )}
+        <Grid item sm={6}>
+          <Typography variant="h4"> {name} </Typography>
+          <Typography variant="subtitle1">Price: {price}</Typography>
+          <Typography variant="subtitle1">Width: {width} ft</Typography>
+          <Typography variant="subtitle1">Length: {length} ft</Typography>
+          <Typography variant="subtitle1">Sleeps: {beds}</Typography>
+          <Typography variant="body1">Description: {description}</Typography>
+          <Button
+            variant="contained"
+            onClick={() => {
+              this.props.addToCart(this.props.selectedProduct, this.props.user)
+            }}
+          >
+            BUY ME!
+          </Button>
+        </Grid>
+      </Grid>
     )
   }
 }
@@ -60,10 +69,13 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    getSingleProductFromServer: productId =>
-      dispatch(getSingleProductFromServer(productId)),
+    getSingleProduct: productId => {
+      dispatch(getSingleProductFromServer(productId))
+    },
+    getCarouselImages: filePathName => {
+      dispatch(getImageList(filePathName))
+    },
     addToCart: (item, user) => {
-      console.log('addToCart', ownProps)
       dispatch(addItemToCart(item, user))
     }
   }

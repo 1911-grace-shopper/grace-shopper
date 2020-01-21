@@ -1,10 +1,11 @@
 const Sequelize = require('sequelize')
 const db = require('../db')
-const path = require('path')
-const fs = require('fs')
 
 const Product = db.define('product', {
   name: {
+    type: Sequelize.STRING
+  },
+  imageFilePath: {
     type: Sequelize.STRING
   },
   price: {
@@ -37,14 +38,16 @@ const Product = db.define('product', {
 })
 
 Product.beforeCreate(product => {
-  const imagePath = product.name
+  const filePath = product.name
     .toLowerCase()
     .split(' ')
     .join('-')
   if (product.name === '') {
+    product.imageFilePath = 'default'
     product.imageUrl = 'default/main.jpg'
   } else {
-    product.imageUrl = imagePath + '/main.jpg'
+    product.imageFilePath = filePath
+    product.imageUrl = filePath + '/main.jpg'
   }
 })
 
