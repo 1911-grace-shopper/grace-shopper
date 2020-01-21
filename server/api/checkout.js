@@ -38,7 +38,6 @@ router.get('', async (req, res, next) => {
 
 router.post('/', async (req, res, next) => {
   try {
-    console.log(req.body)
     let newOrder = await Order.create(req.body)
     res.json(newOrder)
   } catch (err) {
