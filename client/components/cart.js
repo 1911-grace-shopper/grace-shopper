@@ -6,7 +6,11 @@ import displayDollars from './helper'
 
 export class Cart extends React.Component {
   componentDidMount() {
+    console.log('THIS PROPS', this.props)
+    console.log('THIS STATE', this.state)
     this.props.getCurrentCart()
+    console.log('THIS PROPS AFTER', this.props)
+    console.log('THIS STATE AFTER', this.state)
   }
 
   clickDelete(item) {
@@ -14,14 +18,15 @@ export class Cart extends React.Component {
   }
 
   render() {
-    const itemsInCart = this.props.currentCart
+    // const itemsInCart = this.props.currentCart
     let total = Number(0)
-    if (itemsInCart.length === 0) {
+    console.log('ITEMS IN CART', this.props.currentCart)
+    if (this.props.currentCart.length === 0) {
       return <div>Please add some tiny homes to your cart!</div>
     }
     return (
       <div>
-        {itemsInCart.map(item => {
+        {this.props.currentCart.map(item => {
           total += Number(item.price * item.count)
           return (
             <ul key={item.id} className="cartItem">
