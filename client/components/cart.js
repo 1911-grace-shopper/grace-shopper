@@ -2,22 +2,21 @@ import React from 'react'
 import {getCart, deleteItem} from '../store/cart'
 import {connect} from 'react-redux'
 import {Link} from 'react-router-dom'
+import displayDollars from './helper'
 
 export class Cart extends React.Component {
   componentDidMount() {
     this.props.getCurrentCart()
   }
 
-  clickDelete(itemId) {
-    this.props.deleteItem(itemId)
-    this.props.getCurrentCart()
+  clickDelete(item) {
+    this.props.deleteItem(item)
+    // this.props.getCurrentCart()
   }
 
   render() {
     const itemsInCart = this.props.currentCart
     let total = Number(0)
-    console.log(this.props)
-
     return (
       <div>
         {itemsInCart.map(item => {
@@ -26,12 +25,14 @@ export class Cart extends React.Component {
             <ul key={item.id} className="cartItem">
               <img className="preview" src={`/images/${item.imageUrl}`} />
               <li>{item.name}</li>
-              <li>Unit Price: ${item.price}</li>
-              <li>Total: {item.price * item.count}</li>
+              <li>Unit Price: {displayDollars(item.price)}</li>
+              <li>
+                Total: {displayDollars(Number(item.price) * Number(item.count))}
+              </li>
               <li>Quantity: {item.count}</li>
               <button
                 onClick={() => {
-                  this.clickDelete(item.id)
+                  this.clickDelete(item)
                 }}
               >
                 Remove (1) From Cart
@@ -39,7 +40,7 @@ export class Cart extends React.Component {
             </ul>
           )
         })}
-        <div>Total: $ {Number(total)}</div>
+        <div>Total: {displayDollars(Number(total))}</div>
         <Link to={{pathname: '/checkout', state: {total: total}}}>
           Checkout
         </Link>
@@ -57,8 +58,8 @@ const mapDispatchToProps = dispatch => {
     getCurrentCart: () => {
       dispatch(getCart())
     },
-    deleteItem: itemId => {
-      dispatch(deleteItem(itemId))
+    deleteItem: item => {
+      dispatch(deleteItem(item))
     }
   }
 }

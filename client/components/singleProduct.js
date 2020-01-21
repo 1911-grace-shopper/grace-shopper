@@ -2,6 +2,7 @@ import React, {Fragment} from 'react'
 import {connect} from 'react-redux'
 import {getSingleProductFromServer} from '../store/productReducer'
 import {addItemToCart} from '../store/cart'
+import displayDollars from './helper'
 
 class SingleProduct extends React.Component {
   componentDidMount() {
@@ -31,7 +32,7 @@ class SingleProduct extends React.Component {
       <div>
         <h2> {name} </h2>
         <img src={`/images/${imageUrl}`} />
-        <p>Price: {price}</p>
+        <p>Price: {displayDollars(price)}</p>
         <p>
           Square Feet:
           {length * width}
