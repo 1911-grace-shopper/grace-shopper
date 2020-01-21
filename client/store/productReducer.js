@@ -23,7 +23,7 @@ export const getProductsFromServer = () => async dispatch => {
   }
 }
 
-export const getOneProductFromServer = productId => async dispatch => {
+export const getSingleProductFromServer = productId => async dispatch => {
   try {
     const res = await Axios.get(`/api/products/${productId}`)
     const action = getSingleProduct(res.data)

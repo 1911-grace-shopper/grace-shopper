@@ -1,11 +1,13 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import Form from './checkoutForm'
+import {completeAnOrder} from '../store/checkoutReducer'
 
 class Checkout extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
+      orderId: this.props.currentCart[0].orderId,
       recipientName: '',
       shippingAddressLineOne: '',
       shippingAddressLineTwo: '',
@@ -18,13 +20,25 @@ class Checkout extends React.Component {
     }
     this.handleChange = this.handleChange.bind(this)
     this.isComplete = this.isComplete.bind(this)
-    // this.handleSubmit = this.handleSubmit.bind(this)
+    this.handleSubmit = this.handleSubmit.bind(this)
+    this.redirectToTarget = this.redirectToTarget.bind(this)
   }
 
   handleChange(event) {
     this.setState({
       [event.target.name]: event.target.value
     })
+  }
+
+  handleSubmit(event) {
+    console.log('this is handle submit', this.state)
+    event.preventDefault()
+    this.props.completeAnOrder(this.state)
+    this.redirectToTarget()
+  }
+
+  redirectToTarget = () => {
+    this.props.history.push('/confirmation')
   }
 
   isComplete() {
@@ -42,15 +56,14 @@ class Checkout extends React.Component {
   //mapping to list items
 
   render() {
-    console.log('this is SESSIONSTORAGE', sessionStorage)
-
+    console.log('this is from just checkout', this.props)
     return (
       <div>
         <div>
           {this.props.currentCart.map(item => {
             return (
               <ul key={item.id}>
-                <li>{item.imageUrl}</li>
+                <img className="preview" src={`/images/${item.imageUrl}`} />
                 <li>{item.name}</li>
                 <li>Unit Price: ${item.price}</li>
                 <li>Quantity: {item.count}</li>
@@ -70,8 +83,18 @@ class Checkout extends React.Component {
   }
 }
 
-const mapStateToProps = state => ({
-  currentCart: state.cart
-})
+const mapStateToProps = function(state) {
+  return {
+    updateOrder: state.updateOrder.updateOrder,
+    currentCart: state.cart
+  }
+}
 
-export default connect(mapStateToProps)(Checkout)
+const mapDispatchToProps = dispatch => {
+  return {
+    completeAnOrder: form => dispatch(completeAnOrder(form))
+    // handleSubmit: () => dispatch(completeAnOrder())
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Checkout)

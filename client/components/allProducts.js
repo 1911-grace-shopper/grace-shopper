@@ -1,32 +1,36 @@
 import React from 'react'
 import {connect} from 'react-redux'
-import {getProductsFromServer} from '../store/productReducer'
-import {Link} from 'react-router-dom'
+import {
+  getProductsFromServer,
+  getSingleProductFromServer
+} from '../store/productReducer'
+import {Link, withRouter} from 'react-router-dom'
 
 class AllProducts extends React.Component {
   componentDidMount() {
-    this.props.getProductsFromServer()
+    this.props.getProducts()
   }
 
   render() {
-    console.log('THIS IS ALL', this.props)
+    console.log('ALL PRODUCTS', this.props)
     return (
       <div>
         <h2>All Products</h2>
         <div className="all_products">
-          <ul className="product_list">
-            {this.props.products.map(product => (
-              <li key={product.id}>
-                <Link
-                  onClick={() => this.props.goToProductDetail(product.id)}
-                  to={'/products/' + product.id}
-                >
-                  {product.name}
-                </Link>
-                <img className="product_image" src={product.imageUrl} />
-              </li>
-            ))}
-          </ul>
+          {this.props.products.map(product => (
+            <div key={product.id} className="product_list">
+              <img
+                className="product_image"
+                src={`/images/${product.imageUrl}`}
+              />
+              <Link
+                to={`/${product.id}`}
+                onClick={() => this.props.getSingleProduct(product.id)}
+              >
+                <h3>{product.name}</h3>
+              </Link>
+            </div>
+          ))}
         </div>
       </div>
     )
@@ -38,11 +42,16 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = (dispatch, ownProps) => {
+  const history = ownProps.history
   return {
-    getProductsFromServer: () => dispatch(getProductsFromServer()),
-    goToProductDetail: productId =>
-      ownProps.history.push(`products/${productId}`)
+    getProducts: () => dispatch(getProductsFromServer()),
+    getSingleProduct: productId => {
+      getSingleProductFromServer(productId)
+      //history.push(`/${productId}`)
+    }
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(AllProducts)
+export default withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(AllProducts)
+)

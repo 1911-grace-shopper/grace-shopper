@@ -23,3 +23,11 @@ form div {
 ul {
   list-style-type: none;
 }
+
+img {
+  max-width: 500px;
+}
+
+img.preview {
+  max-width: 150px;
+}

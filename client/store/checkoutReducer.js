@@ -2,19 +2,16 @@ import Axios from 'axios'
 
 const COMPLETE_CHECKOUT = 'COMPLETE_CHECKOUT'
 
-const initialState = {
-  updateOrder: []
-}
-
 const completeCheckout = updateOrder => ({
   type: COMPLETE_CHECKOUT,
   updateOrder
 })
 
-export const completeAnOrder = updateOrder => async dispatch => {
+export const completeAnOrder = form => async dispatch => {
   try {
-    const res = await Axios.put(`/api/checkout/${orderId}`, updateOrder)
-    console.log(res)
+    console.log('COMPLETE ORDER THUNK', form.orderId)
+    const res = await Axios.put(`/api/checkout/${form.orderId}`, form)
+
     const info = res.data
     dispatch(completeCheckout(info))
   } catch (err) {
@@ -22,12 +19,16 @@ export const completeAnOrder = updateOrder => async dispatch => {
   }
 }
 
+const initialState = {
+  updateOrder: []
+}
+
 const checkoutReducer = (state = initialState, action) => {
   switch (action.type) {
     case COMPLETE_CHECKOUT:
       return {
         ...state,
-        updateOrder: [action.updateOrder]
+        updateOrder: action.updateOrder
       }
     default:
       return state
