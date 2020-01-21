@@ -120,15 +120,14 @@ const itemDeleted = itemId => ({
 
 export const deleteItem = item => {
   return async dispatch => {
-    let cartId = JSON.parse(sessionStorage.getItem('cartId'))
-    let currentCart = await Axios.get(`/api/carts/${cartId}`)
-    let itemtoDelete = currentCart.data.filter(
-      itemInCart => itemInCart.id === item.id
-    )
-
-    let deletedItem = itemtoDelete[0]
-
     try {
+      let cartId = JSON.parse(sessionStorage.getItem('cartId'))
+      let currentCart = await Axios.get(`/api/carts/${cartId}`)
+      let itemtoDelete = currentCart.data.filter(
+        itemInCart => itemInCart.id === item.id
+      )
+
+      let deletedItem = itemtoDelete[0]
       //if only one in cart
       if (deletedItem.orderDetails.count <= 1) {
         //let updatedCart = currentCart.filter(item => item.id !== id)
