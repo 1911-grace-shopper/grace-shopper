@@ -103,7 +103,6 @@ const Form = props => (
           disabled={!props.recipientName}
           to="/confirmation"
           onClick={e => props.handleSubmit(e)}
-          render={<Confirmation />}
         >
           Submit Order
         </Link>
