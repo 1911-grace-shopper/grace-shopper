@@ -11,12 +11,14 @@ export class Cart extends React.Component {
 
   clickDelete(item) {
     this.props.deleteItem(item)
-    // this.props.getCurrentCart()
   }
 
   render() {
     const itemsInCart = this.props.currentCart
     let total = Number(0)
+    if (itemsInCart.length === 0) {
+      return <div>Please add some tiny homes to your cart!</div>
+    }
     return (
       <div>
         {itemsInCart.map(item => {
