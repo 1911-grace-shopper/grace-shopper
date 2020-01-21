@@ -4,6 +4,12 @@ const GET_CART = 'GET_CART'
 const ADD_ITEM_TO_CART = 'ADD_ITEM_TO_CART'
 const REMOVE_ITEM_FROM_CART = 'REMOVE_ITEM_FROM_CART'
 const UPDATE_COUNT_IN_CART = 'UPDATE_COUNT_IN_CART'
+const COMPLETE_CHECKOUT = 'COMPLETE_CHECKOUT'
+
+const completeCheckout = updateOrder => ({
+  type: COMPLETE_CHECKOUT,
+  updateOrder
+})
 
 const gotCart = cart => ({
   type: GET_CART,
@@ -94,6 +100,19 @@ export const addItemToCart = (item, user) => {
   }
 }
 
+export const completeAnOrder = (form, history) => async dispatch => {
+  try {
+    console.log('COMPLETE ORDER THUNK', form.orderId)
+    const res = await Axios.put(`/api/checkout/${form.orderId}`, form)
+    const info = res.data
+    sessionStorage.clear()
+    history.push('/confirmation')
+    dispatch(completeCheckout(info))
+  } catch (err) {
+    console.log('This is from the completeOrder thunk', err)
+  }
+}
+
 const itemDeleted = itemId => ({
   type: REMOVE_ITEM_FROM_CART,
   itemId: itemId
@@ -101,15 +120,14 @@ const itemDeleted = itemId => ({
 
 export const deleteItem = item => {
   return async dispatch => {
-    let cartId = JSON.parse(sessionStorage.getItem('cartId'))
-    let currentCart = await Axios.get(`/api/carts/${cartId}`)
-    let itemtoDelete = currentCart.data.filter(
-      itemInCart => itemInCart.id === item.id
-    )
-
-    let deletedItem = itemtoDelete[0]
-
     try {
+      let cartId = JSON.parse(sessionStorage.getItem('cartId'))
+      let currentCart = await Axios.get(`/api/carts/${cartId}`)
+      let itemtoDelete = currentCart.data.filter(
+        itemInCart => itemInCart.id === item.id
+      )
+
+      let deletedItem = itemtoDelete[0]
       //if only one in cart
       if (deletedItem.orderDetails.count <= 1) {
         //let updatedCart = currentCart.filter(item => item.id !== id)
@@ -141,7 +159,6 @@ const cartReducer = (state = initialState, action) => {
     case GET_CART:
       return action.cart
     case ADD_ITEM_TO_CART:
-      console.log(state, 'STATE')
       return state.concat([action.item])
     case UPDATE_COUNT_IN_CART:
       state.forEach(item => {
@@ -152,6 +169,9 @@ const cartReducer = (state = initialState, action) => {
       return state
     case REMOVE_ITEM_FROM_CART:
       return state.filter(item => item.id !== action.itemId)
+
+    case COMPLETE_CHECKOUT:
+      return []
     default:
       return state
   }

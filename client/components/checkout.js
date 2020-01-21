@@ -1,7 +1,7 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import Form from './checkoutForm'
-import {completeAnOrder} from '../store/checkoutReducer'
+import {completeAnOrder} from '../store/cart'
 import displayDollars from './helper'
 
 class Checkout extends React.Component {
@@ -34,7 +34,7 @@ class Checkout extends React.Component {
   handleSubmit(event) {
     event.preventDefault()
     this.props.completeAnOrder(this.state)
-    this.redirectToTarget()
+    // this.redirectToTarget()
   }
 
   redirectToTarget = () => {
@@ -83,15 +83,15 @@ class Checkout extends React.Component {
 }
 
 const mapStateToProps = function(state) {
+  console.log('CHECKOUT MSTP', state.cart)
   return {
-    updateOrder: state.updateOrder.updateOrder,
     currentCart: state.cart
   }
 }
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    completeAnOrder: form => dispatch(completeAnOrder(form))
+    completeAnOrder: form => dispatch(completeAnOrder(form, ownProps.history))
   }
 }
 
