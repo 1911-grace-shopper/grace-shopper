@@ -48,6 +48,7 @@
     "compression": "^1.7.3",
     "connect-session-sequelize": "^6.0.0",
     "express": "^4.16.4",
+    "express-sanitizer": "^1.0.5",
     "express-session": "^1.17.0",
     "history": "^4.10.1",
     "jest": "^24.9.0",

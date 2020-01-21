@@ -3,6 +3,16 @@ const {Order} = require('../db/models')
 
 router.put('/:orderId', async (req, res, next) => {
   try {
+    const {
+      deliveryMethod,
+      shippingAddressLineOne,
+      shippingAddressLineTwo,
+      shippingCity,
+      shippingState,
+      shippingAddressZipCode,
+      recipientName,
+      total
+    } = req.sanitize(req.body)
     let findOrder = await Order.update(
       {
         deliveryMethod: req.body.deliveryMethod,
@@ -38,8 +48,7 @@ router.get('', async (req, res, next) => {
 
 router.post('/', async (req, res, next) => {
   try {
-    console.log(req.body)
-    let newOrder = await Order.create(req.body)
+    let newOrder = await Order.create(req.sanitize(req.body))
     res.json(newOrder)
   } catch (err) {
     next(err)
