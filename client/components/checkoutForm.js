@@ -1,6 +1,7 @@
 import React from 'react'
 import {Link} from 'react-router-dom'
 import Confirmation from './confirmation'
+import displayDollars from './helper'
 
 const Form = props => (
   console.log('from checkout form', props),
@@ -8,16 +9,16 @@ const Form = props => (
     <form id="checkout_form" onSubmit={props.handleSubmit}>
       <label>
         Recipient Name:
-        {!props.recipientName &&
-          props.warningMessage && (
-            <span className="warning">{props.warningMessage}</span>
-          )}
         <input
           type="text"
           name="recipientName"
           onChange={props.handleChange}
           value={props.recipientName}
         />
+        {!props.recipientName &&
+          props.warningMessage && (
+            <span className="warning">{props.warningMessage}</span>
+          )}
       </label>
       <h3>Shipping Address</h3>
       <label>
@@ -28,6 +29,10 @@ const Form = props => (
           onChange={props.handleChange}
           value={props.shippingAddressLineOne}
         />
+        {!props.shippingAddressLineOne &&
+          props.warningMessage && (
+            <span className="warning">{props.warningMessage}</span>
+          )}
       </label>
       <label>
         Line 2:
@@ -46,6 +51,10 @@ const Form = props => (
           onChange={props.handleChange}
           value={props.shippingCity}
         />
+        {!props.shippingCity &&
+          props.warningMessage && (
+            <span className="warning">{props.warningMessage}</span>
+          )}
       </label>
       <label>
         State:
@@ -55,6 +64,10 @@ const Form = props => (
           onChange={props.handleChange}
           value={props.shippingState}
         />
+        {!props.shippingState &&
+          props.warningMessage && (
+            <span className="warning">{props.warningMessage}</span>
+          )}
       </label>
       <label>
         Zip:
@@ -64,6 +77,10 @@ const Form = props => (
           onChange={props.handleChange}
           value={props.shippingAddressZipCode}
         />
+        {!props.shippingAddressZipCode &&
+          props.warningMessage && (
+            <span className="warning">{props.warningMessage}</span>
+          )}
       </label>
       <label>
         Delivery Method:
@@ -77,9 +94,9 @@ const Form = props => (
           <option value="Pick-Up">Pick-Up</option>
         </select>
       </label>
-      <label>Total: {props.total}</label>
+      <label>Total: {displayDollars(props.total)}</label>
       {!props.isComplete() ? (
-        <span>Please Enter Required Fields</span>
+        <span>Please Enter Required(*) Fields</span>
       ) : (
         <Link
           type="submit"
