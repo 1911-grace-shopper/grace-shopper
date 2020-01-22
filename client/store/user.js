@@ -53,7 +53,7 @@ export const auth = (email, password, method) => async dispatch => {
 
   try {
     dispatch(getUser(res.data))
-
+    sessionStorage.clear()
     if (res.data) {
       let userId = res.data.id
       let incompleteOrder = await axios.get(`/api/checkout/active/${userId}`)
