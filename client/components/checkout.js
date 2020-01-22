@@ -34,7 +34,6 @@ class Checkout extends React.Component {
   handleSubmit(event) {
     event.preventDefault()
     this.props.completeAnOrder(this.state)
-    // this.redirectToTarget()
   }
 
   redirectToTarget = () => {
