@@ -1,6 +1,7 @@
 const path = require('path')
 const express = require('express')
 const morgan = require('morgan')
+const expressSanitizer = require('express-sanitizer')
 const compression = require('compression')
 const session = require('express-session')
 const passport = require('passport')
@@ -51,6 +52,9 @@ const createApp = () => {
   // body parsing middleware
   app.use(express.json())
   app.use(express.urlencoded({extended: true}))
+
+  // sanitize middleware
+  app.use(expressSanitizer())
 
   // compression middleware
   app.use(compression())
