@@ -95,7 +95,7 @@ export const addItemToCart = (item, user) => {
   }
 }
 
-export const completeAnOrder = (form, history) => async dispatch => {
+export const submitOrder = (form, history) => async dispatch => {
   try {
     const {data} = await Axios.put(`/api/checkout/${form.orderId}`, form)
 
@@ -103,7 +103,7 @@ export const completeAnOrder = (form, history) => async dispatch => {
     history.push('/confirmation')
     dispatch(getCart())
   } catch (err) {
-    console.log('This is from the completeOrder thunk', err)
+    console.log(err)
   }
 }
 

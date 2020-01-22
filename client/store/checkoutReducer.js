@@ -1,21 +1,16 @@
-const UPDATE_TOTAL = 'UPDATE_TOTAL'
+const HANDLE_FORM_CHANGE = 'HANDLE_FORM_CHANGE'
 
-export const updateTotal = total => ({
-  type: UPDATE_TOTAL,
-  total
+export const handleFormChange = form => ({
+  type: HANDLE_FORM_CHANGE,
+  form
 })
 
-const initialState = {
-  total: 0
-}
+const initialState = {}
 
 const checkoutReducer = (state = initialState, action) => {
   switch (action.type) {
-    case UPDATE_TOTAL:
-      return {
-        ...state,
-        total: action.total
-      }
+    case HANDLE_FORM_CHANGE:
+      return {...state, ...action.form}
     default:
       return state
   }

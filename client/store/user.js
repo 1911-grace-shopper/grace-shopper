@@ -25,6 +25,19 @@ export const me = () => async dispatch => {
   try {
     const res = await axios.get('/auth/me')
     dispatch(getUser(res.data || defaultUser))
+
+    //if the user is logged in
+    if (res.data.id) {
+      let userId = res.data.id
+      let incompleteOrder = await axios.get(`/api/checkout/active/${userId}`)
+
+      if (incompleteOrder.data !== null && incompleteOrder.data.id) {
+        sessionStorage.setItem(
+          'cartId',
+          JSON.stringify(incompleteOrder.data.id)
+        )
+      }
+    }
   } catch (err) {
     console.error(err)
   }
@@ -40,14 +53,19 @@ export const auth = (email, password, method) => async dispatch => {
 
   try {
     dispatch(getUser(res.data))
-    console.log(res.data, 'hereeee')
 
-    let userId = res.data.id
-    //sets session to thats user id
-    let incompleteOrder = await axios.get(`/api/checkout/active/${userId}`)
-    console.log(incompleteOrder, 'RETURNED DATA')
+    if (res.data) {
+      let userId = res.data.id
+      let incompleteOrder = await axios.get(`/api/checkout/active/${userId}`)
 
-    // sessionStorage.setItem('cartId', JSON.stringify(cartId))
+      if (incompleteOrder.data !== null && incompleteOrder.data.id) {
+        sessionStorage.setItem(
+          'cartId',
+          JSON.stringify(incompleteOrder.data.id)
+        )
+      }
+    }
+
     history.push('/')
   } catch (dispatchOrHistoryErr) {
     console.error(dispatchOrHistoryErr)
@@ -58,6 +76,7 @@ export const logout = () => async dispatch => {
   try {
     await axios.post('/auth/logout')
     dispatch(removeUser())
+    sessionStorage.clear()
     history.push('/login')
   } catch (err) {
     console.error(err)
