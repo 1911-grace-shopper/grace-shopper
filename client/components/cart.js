@@ -19,6 +19,7 @@ export class Cart extends React.Component {
     if (itemsInCart.length === 0) {
       return <div>Please add some tiny homes to your cart!</div>
     }
+    console.log('current cart', this.props.currentCart)
     return (
       <div>
         {itemsInCart.map(item => {
@@ -43,8 +44,8 @@ export class Cart extends React.Component {
           )
         })}
         <div>Total: {displayDollars(Number(total))}</div>
-        <Link to={{pathname: '/checkout', state: {total: total}}}>
-          Checkout
+        <Link to="/checkout">
+          <button>Checkout</button>
         </Link>
       </div>
     )

@@ -39,7 +39,12 @@ router.get('', adminsOnly, async (req, res, next) => {
 
 router.post('/', async (req, res, next) => {
   try {
-    let newOrder = await Order.create(req.sanitize(req.body))
+    const userId = req.sanitize(req.body.userId)
+    const orderComplete = req.sanitize(req.body.orderComplete)
+    let newOrder = await Order.create({
+      userId: userId,
+      orderComplete: orderComplete
+    })
     res.json(newOrder)
   } catch (err) {
     next(err)

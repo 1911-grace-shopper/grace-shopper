@@ -55,6 +55,7 @@ class Checkout extends React.Component {
   //mapping to list items
 
   render() {
+    console.log('checkout', this.props.user)
     return (
       <div>
         <div>
@@ -82,9 +83,9 @@ class Checkout extends React.Component {
 }
 
 const mapStateToProps = function(state) {
-  console.log('CHECKOUT MSTP', state.cart)
   return {
-    currentCart: state.cart
+    currentCart: state.cart,
+    user: state.user
   }
 }
 
