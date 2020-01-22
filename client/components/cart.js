@@ -1,5 +1,6 @@
 import React from 'react'
 import {getCart, deleteItem} from '../store/cart'
+import {updateTotal} from '../store/checkoutReducer'
 import {connect} from 'react-redux'
 import {Link} from 'react-router-dom'
 import displayDollars from './helper'
@@ -45,7 +46,9 @@ export class Cart extends React.Component {
         })}
         <div>Total: {displayDollars(Number(total))}</div>
         <Link to="/checkout">
-          <button>Checkout</button>
+          <button onClick={() => this.props.updateTotal(total)}>
+            Checkout
+          </button>
         </Link>
       </div>
     )
@@ -63,6 +66,9 @@ const mapDispatchToProps = dispatch => {
     },
     deleteItem: item => {
       dispatch(deleteItem(item))
+    },
+    updateTotal: total => {
+      dispatch(updateTotal(total))
     }
   }
 }

@@ -1,39 +1,24 @@
-// import Axios from 'axios'
+const UPDATE_TOTAL = 'UPDATE_TOTAL'
 
-// const COMPLETE_CHECKOUT = 'COMPLETE_CHECKOUT'
+export const updateTotal = total => ({
+  type: UPDATE_TOTAL,
+  total
+})
 
-// const completeCheckout = updateOrder => ({
-//   type: COMPLETE_CHECKOUT,
-//   updateOrder
-// })
+const initialState = {
+  total: 0
+}
 
-// export const completeAnOrder = (form, history) => async dispatch => {
-//   try {
-//     console.log('COMPLETE ORDER THUNK', form.orderId)
-//     const res = await Axios.put(`/api/checkout/${form.orderId}`, form)
-//     const info = res.data
-//     sessionStorage.clear()
-//     history.push('/confirmation')
-//     dispatch(completeCheckout(info))
-//   } catch (err) {
-//     console.log('This is from the completeOrder thunk', err)
-//   }
-// }
+const checkoutReducer = (state = initialState, action) => {
+  switch (action.type) {
+    case UPDATE_TOTAL:
+      return {
+        ...state,
+        total: action.total
+      }
+    default:
+      return state
+  }
+}
 
-// const initialState = {
-//   updateOrder: []
-// }
-
-// const checkoutReducer = (state = initialState, action) => {
-//   switch (action.type) {
-//     case COMPLETE_CHECKOUT:
-//       return {
-//         ...state,
-//         updateOrder: action.updateOrder
-//       }
-//     default:
-//       return state
-//   }
-// }
-
-// export default checkoutReducer
+export default checkoutReducer

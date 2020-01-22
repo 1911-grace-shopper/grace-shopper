@@ -5,8 +5,8 @@ import {completeAnOrder} from '../store/cart'
 import displayDollars from './helper'
 
 class Checkout extends React.Component {
-  constructor(props) {
-    super(props)
+  constructor() {
+    super()
     this.state = {
       orderId: this.props.currentCart[0].orderId,
       recipientName: '',
@@ -16,13 +16,12 @@ class Checkout extends React.Component {
       shippingState: '',
       shippingAddressZipCode: '',
       deliveryMethod: '',
-      total: this.props.location.state.total,
+      total: this.props.total,
       warningMessage: '*'
     }
     this.handleChange = this.handleChange.bind(this)
     this.isComplete = this.isComplete.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
-    this.redirectToTarget = this.redirectToTarget.bind(this)
   }
 
   handleChange(event) {
@@ -34,10 +33,6 @@ class Checkout extends React.Component {
   handleSubmit(event) {
     event.preventDefault()
     this.props.completeAnOrder(this.state)
-  }
-
-  redirectToTarget = () => {
-    this.props.history.push('/confirmation')
   }
 
   isComplete() {
@@ -55,7 +50,13 @@ class Checkout extends React.Component {
   //mapping to list items
 
   render() {
-    console.log('checkout', this.props.user)
+    console.log('checkout', this.props.currentCart)
+    // if (this.props.currentCart.length) {
+    //   this.setState ({
+    //     orderId: this.props.currentCart[0].orderId,
+    //     total: this.props.total
+    //   })
+    // }
     return (
       <div>
         <div>
@@ -85,6 +86,7 @@ class Checkout extends React.Component {
 const mapStateToProps = function(state) {
   return {
     currentCart: state.cart,
+    total: state.checkout.total,
     user: state.user
   }
 }
