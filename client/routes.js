@@ -13,6 +13,7 @@ import {
 } from './components'
 import {me} from './store'
 import Confirmation from './components/confirmation'
+import Profile from './components/profile'
 
 /**
  * COMPONENT
@@ -29,7 +30,7 @@ class Routes extends Component {
       <Switch>
         {/* Routes placed here are available to all visitors */}
         <Route exact path="/" component={AllProducts} />
-
+        <Route path="/profile" component={Profile} />
         <Route path="/login" component={Login} />
         <Route path="/signup" component={Signup} />
         <Route path="/cart" component={Cart} />
