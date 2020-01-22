@@ -1,5 +1,5 @@
 const router = require('express').Router()
-const {Order} = require('../db/models')
+const {Order, Product, orderDetails} = require('../db/models')
 const adminsOnly = require('./security')
 
 router.put('/:orderId', async (req, res, next) => {
@@ -89,6 +89,7 @@ router.get('/complete', async (req, res, next) => {
   }
 })
 
+//get all complete orders assoc with user - order history
 router.get('/complete/:userId', async (req, res, next) => {
   const userId = req.params.userId
   try {
@@ -96,12 +97,38 @@ router.get('/complete/:userId', async (req, res, next) => {
       where: {
         orderComplete: true,
         userId: userId
-      }
+      },
+      include: [
+        {
+          model: Product,
+          attributes: ['id', 'name', 'imageUrl'],
+          through: {attributes: ['priceAtPurchase', 'count']}
+        }
+      ]
     })
     res.json(complete)
   } catch (error) {
     next(error)
   }
 })
+
+// router.get('/complete/:userId', async (req, res, next) => {
+//   const userId = req.params.userId
+//   try {
+//     const complete = await Order.findAll({
+//       where: {
+//         orderComplete: true,
+//         userId: userId
+//       },
+//       attributes:['id', 'products'], include: [{model: Product,
+//         attributes: ['id', 'orderDetails'],
+//         through: {attributes: ['priceAtPurchase', 'count']}
+//       }]
+//     })
+//     res.json(complete)
+//   } catch (error) {
+//     next(error)
+//   }
+// })
 
 module.exports = router
