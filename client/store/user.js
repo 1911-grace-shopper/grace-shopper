@@ -43,11 +43,12 @@ export const auth = (email, password, method) => async dispatch => {
     console.log(res.data, 'hereeee')
 
     let userId = res.data.id
-    //sets session to thats user id
     let incompleteOrder = await axios.get(`/api/checkout/active/${userId}`)
-    console.log(incompleteOrder, 'RETURNED DATA')
 
-    // sessionStorage.setItem('cartId', JSON.stringify(cartId))
+    if (incompleteOrder) {
+      sessionStorage.setItem('cartId', JSON.stringify(incompleteOrder.data.id))
+    }
+
     history.push('/')
   } catch (dispatchOrHistoryErr) {
     console.error(dispatchOrHistoryErr)

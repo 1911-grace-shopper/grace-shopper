@@ -38,9 +38,12 @@ router.get('', adminsOnly, async (req, res, next) => {
 })
 
 router.post('/', async (req, res, next) => {
-  console.log(req.body, 'bodyyy')
   try {
-    let newOrder = await Order.create(req.sanitize(req.body))
+    const userId = req.sanitize(req.body.userId)
+    let newOrder = await Order.create({
+      userId: userId,
+      orderComplete: false
+    })
     res.json(newOrder)
   } catch (err) {
     next(err)
@@ -63,13 +66,13 @@ router.get('/active', async (req, res, next) => {
 router.get('/active/:userId', async (req, res, next) => {
   const userId = req.params.userId
   try {
-    const allActive = await Order.findOne({
+    const active = await Order.findOne({
       where: {
         orderComplete: false,
         userId: userId
       }
     })
-    res.json(allActive)
+    res.json(active)
   } catch (error) {
     next(error)
   }
