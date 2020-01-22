@@ -40,6 +40,14 @@ export const auth = (email, password, method) => async dispatch => {
 
   try {
     dispatch(getUser(res.data))
+    console.log(res.data, 'hereeee')
+
+    let userId = res.data.id
+    //sets session to thats user id
+    let incompleteOrder = await axios.get(`/api/checkout/active/${userId}`)
+    console.log(incompleteOrder, 'RETURNED DATA')
+
+    // sessionStorage.setItem('cartId', JSON.stringify(cartId))
     history.push('/')
   } catch (dispatchOrHistoryErr) {
     console.error(dispatchOrHistoryErr)

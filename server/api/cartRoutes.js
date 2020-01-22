@@ -68,7 +68,7 @@ router.delete('/:orderId/:itemId', async (req, res, next) => {
       where: {orderId: oId, productId: pId}
     })
 
-    res.send('success')
+    res.send('delete success')
   } catch (error) {
     next(error)
   }
@@ -88,7 +88,7 @@ router.put('/:orderId/:itemId', async function(req, res, next) {
         returning: true
       }
     )
-    res.send('boop')
+    res.send('count update success')
   } catch (error) {
     next(error)
   }
