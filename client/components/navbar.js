@@ -3,7 +3,8 @@ import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
 import {Link} from 'react-router-dom'
 import {logout} from '../store'
-import {Grid, Typography} from '@material-ui/core'
+import {Grid, Typography, Badge, Icon} from '@material-ui/core'
+import {ShoppingCart} from '@material-ui/icons'
 
 const Navbar = ({handleClick, isLoggedIn}) => (
   <Fragment>
@@ -13,11 +14,10 @@ const Navbar = ({handleClick, isLoggedIn}) => (
       </Link>
     </Grid>
     <Grid container justify="center" alignItems="center" id="navbar">
-      <Typography variant="h6">
+      <Typography variant="button">
         <Link to="/">Tiny Houses</Link>
-        <Link to="urban-micro">Urban Micro Homes</Link>
-        <Link to="airstream">Airstream</Link>
-        <Link to="/cart">Cart</Link>
+        <Link to="/">Urban Micro Homes</Link>
+        <Link to="/">Airstream</Link>
         {isLoggedIn ? (
           <Fragment>
             {/* The navbar will show these links after you log in */}
@@ -32,6 +32,11 @@ const Navbar = ({handleClick, isLoggedIn}) => (
             <Link to="/login">Login</Link>
           </Fragment>
         )}
+        <Link to="/cart">
+          <Badge badgeContent={7} color="secondary" showZero>
+            <ShoppingCart />
+          </Badge>
+        </Link>
       </Typography>
     </Grid>
     <hr />

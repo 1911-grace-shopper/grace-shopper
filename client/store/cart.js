@@ -76,7 +76,6 @@ export const addItemToCart = (item, user) => {
       })
 
       sessionStorage.setItem('cartId', JSON.stringify(cartId))
-
       dispatch(updatedItemCount(item.id, 1))
     } else {
       let newCart = {
@@ -95,7 +94,7 @@ export const addItemToCart = (item, user) => {
   }
 }
 
-export const completeAnOrder = (form, history) => async dispatch => {
+export const submitOrder = (form, history) => async dispatch => {
   try {
     const {data} = await Axios.put(`/api/checkout/${form.orderId}`, form)
 
@@ -103,7 +102,7 @@ export const completeAnOrder = (form, history) => async dispatch => {
     history.push('/confirmation')
     dispatch(getCart())
   } catch (err) {
-    console.log('This is from the completeOrder thunk', err)
+    console.log(err)
   }
 }
 
@@ -114,12 +113,12 @@ const itemDeleted = itemId => ({
 
 export const deleteItem = item => {
   return async dispatch => {
-    let cartId = JSON.parse(sessionStorage.getItem('cartId'))
-    let currentCart = await Axios.get(`/api/carts/${cartId}`)
-    let itemtoDelete = currentCart.data.filter(
-      itemInCart => itemInCart.id === item.id
-    )
     try {
+      let cartId = JSON.parse(sessionStorage.getItem('cartId'))
+      let currentCart = await Axios.get(`/api/carts/${cartId}`)
+      let itemtoDelete = currentCart.data.filter(
+        itemInCart => itemInCart.id === item.id
+      )
       let deletedItem = itemtoDelete[0]
       //if only one in cart
       if (deletedItem.orderDetails.count <= 1) {
@@ -128,18 +127,14 @@ export const deleteItem = item => {
         dispatch(itemDeleted(item.id))
         await Axios.delete(`/api/carts/${cartId}/${item.id}`)
       } else {
-        //if there is more than one in the cart
-        // currentCart.forEach(async itemInCart => {
-        //   if (itemInCart.id === id) {
-
-        //if count needs to be updated in order details
-        dispatch(updatedItemCount(item.id, -1))
-        await Axios.put(`/api/carts/${cartId}/${item.id}`, {
+        const newCart = await Axios.put(`/api/carts/${cartId}/${item.id}`, {
           count: deletedItem.orderDetails.count - 1
         })
+
+        dispatch(getCart())
       }
     } catch (error) {
-      console.log('Delete Error')
+      console.log(error)
     }
   }
 }
@@ -157,6 +152,9 @@ const cartReducer = (state = initialState, action) => {
       state.forEach(item => {
         if (item.id === action.itemId) {
           item.count += action.increment
+          if (item.orderDetails && item.orderDetails) {
+            item.orderDetails.count = item.count
+          }
         }
       })
       return state

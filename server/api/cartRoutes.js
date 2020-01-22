@@ -88,7 +88,8 @@ router.put('/:orderId/:itemId', async function(req, res, next) {
         returning: true
       }
     )
-    res.send('count update success')
+    console.log(affectedRows)
+    res.json(affectedRows)
   } catch (error) {
     next(error)
   }

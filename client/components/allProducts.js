@@ -5,14 +5,17 @@ import {
   getSingleProductFromServer
 } from '../store/productReducer'
 import {Link, withRouter} from 'react-router-dom'
+import {makeStyles} from '@material-ui/core/styles'
 import {
   Grid,
   Card,
   CardActionArea,
   CardMedia,
   CardContent,
-  Typography
+  Typography,
+  Box
 } from '@material-ui/core'
+import {Icon} from '@material-ui/icons'
 
 class AllProducts extends React.Component {
   componentDidMount() {
@@ -20,12 +23,11 @@ class AllProducts extends React.Component {
   }
 
   render() {
-    console.log('ALL PRODUCTS', this.props)
     return (
-      <Grid container spacing={4} className="main">
+      <Grid container spacing={4} className="main all-products">
         {this.props.products.map(product => (
           <Grid item xs={4} key={product.id}>
-            <Card>
+            <Card className="card">
               <CardActionArea>
                 <Link
                   to={`/${product.id}`}
@@ -33,14 +35,28 @@ class AllProducts extends React.Component {
                 >
                   <CardMedia
                     component="img"
+                    height="250"
                     image={`/images/${product.imageUrl}`}
                   />
+                  <CardContent className="card-content">
+                    <Box component="div">
+                      <Typography variant="h5" gutterBottom>
+                        {product.name}
+                      </Typography>
+                    </Box>
+                    <Box component="div">
+                      <Typography variant="subtitle2">
+                        size: {product.width} x {product.length}
+                      </Typography>
+                      <Typography variant="subtitle2">
+                        sleeps: {product.beds}
+                      </Typography>
+                      <Typography variant="subtitle2">
+                        style: {product.style}
+                      </Typography>
+                    </Box>
+                  </CardContent>
                 </Link>
-                <CardContent>
-                  <Typography gutterBottom variant="h5" component="h3">
-                    {product.name}
-                  </Typography>
-                </CardContent>
               </CardActionArea>
             </Card>
           </Grid>
@@ -54,13 +70,11 @@ const mapStateToProps = state => ({
   products: state.products.products
 })
 
-const mapDispatchToProps = (dispatch, ownProps) => {
-  const history = ownProps.history
+const mapDispatchToProps = dispatch => {
   return {
     getProducts: () => dispatch(getProductsFromServer()),
     getSingleProduct: productId => {
       getSingleProductFromServer(productId)
-      //history.push(`/${productId}`)
     }
   }
 }
