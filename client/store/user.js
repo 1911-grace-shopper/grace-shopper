@@ -30,6 +30,7 @@ export const me = () => async dispatch => {
     if (res.data.id) {
       let userId = res.data.id
       let incompleteOrder = await axios.get(`/api/checkout/active/${userId}`)
+      // let completeOrders = await axios.get(`api/checkout/complete/${userId}`)
 
       if (incompleteOrder.data !== null && incompleteOrder.data.id) {
         sessionStorage.setItem(
