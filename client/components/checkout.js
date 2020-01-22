@@ -8,6 +8,9 @@ import displayDollars from './helper'
 class Checkout extends React.Component {
   constructor(props) {
     super(props)
+    this.state = {
+      warningMessage: '*'
+    }
     this.total = 0
     this.isComplete = this.isComplete.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
@@ -21,7 +24,7 @@ class Checkout extends React.Component {
     event.preventDefault()
 
     const mainInfo = {
-      userId: this.user.id,
+      userId: this.props.user.id || null,
       orderId: this.props.currentCart[0].orderId,
       total: this.calculateTotal()
     }

@@ -100,7 +100,7 @@ const Form = props => (
         to="/confirmation"
         onClick={e => props.handleSubmit(e)}
       >
-        Submit Order
+        <button>Submit Order</button>
       </Link>
     )}
   </form>
