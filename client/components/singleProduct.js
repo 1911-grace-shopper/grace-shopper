@@ -27,7 +27,7 @@ class SingleProduct extends React.Component {
       beds,
       description
     } = this.props.selectedProduct
-    console.log('SINGLE PRODUCT:', this.props.selectedProduct)
+
     return (
       <Grid
         container

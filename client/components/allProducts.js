@@ -20,7 +20,6 @@ class AllProducts extends React.Component {
   }
 
   render() {
-    console.log('ALL PRODUCTS', this.props)
     return (
       <Grid container spacing={4} className="main">
         {this.props.products.map(product => (
