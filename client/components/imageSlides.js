@@ -1,8 +1,8 @@
 import React from 'react'
 import {Carousel} from 'react-responsive-carousel'
+import {Card, CardMedia} from '@material-ui/core'
 
 const ImageSlides = ({images, imageFilePath}) => (
-  // return (
   <Carousel>
     {images.map((fileName, index) => (
       <div key={index}>
@@ -10,7 +10,6 @@ const ImageSlides = ({images, imageFilePath}) => (
       </div>
     ))}
   </Carousel>
-  // )
 )
 
 export default ImageSlides

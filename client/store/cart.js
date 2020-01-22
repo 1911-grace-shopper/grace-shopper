@@ -94,7 +94,7 @@ export const addItemToCart = (item, user) => {
   }
 }
 
-export const completeAnOrder = (form, history) => async dispatch => {
+export const submitOrder = (form, history) => async dispatch => {
   try {
     const {data} = await Axios.put(`/api/checkout/${form.orderId}`, form)
 
@@ -113,12 +113,12 @@ const itemDeleted = itemId => ({
 
 export const deleteItem = item => {
   return async dispatch => {
-    let cartId = JSON.parse(sessionStorage.getItem('cartId'))
-    let currentCart = await Axios.get(`/api/carts/${cartId}`)
-    let itemtoDelete = currentCart.data.filter(
-      itemInCart => itemInCart.id === item.id
-    )
     try {
+      let cartId = JSON.parse(sessionStorage.getItem('cartId'))
+      let currentCart = await Axios.get(`/api/carts/${cartId}`)
+      let itemtoDelete = currentCart.data.filter(
+        itemInCart => itemInCart.id === item.id
+      )
       let deletedItem = itemtoDelete[0]
       //if only one in cart
       if (deletedItem.orderDetails.count <= 1) {
@@ -134,7 +134,7 @@ export const deleteItem = item => {
         dispatch(getCart())
       }
     } catch (error) {
-      console.log('Delete Error')
+      console.log(error)
     }
   }
 }
