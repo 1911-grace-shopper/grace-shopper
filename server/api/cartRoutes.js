@@ -47,8 +47,12 @@ router.get('/:orderId/:itemId', async (req, res, next) => {
 //add a new order
 router.post('', async (req, res, next) => {
   try {
-    let newOrder = await orderDetails.create(req.body)
-    console.log(newOrder, 'NEW ORDER')
+    let newOrder = await orderDetails.create({
+      orderId: req.sanitize(req.body.orderId),
+      productId: req.sanitize(req.body.productId),
+      count: req.sanitize(req.body.count),
+      priceAtPurchase: req.sanitize(req.body.priceAtPurchase)
+    })
     res.json(newOrder)
   } catch (err) {
     next(err)
@@ -63,6 +67,8 @@ router.delete('/:orderId/:itemId', async (req, res, next) => {
     orderDetails.destroy({
       where: {orderId: oId, productId: pId}
     })
+
+    res.send('success')
   } catch (error) {
     next(error)
   }
@@ -70,8 +76,8 @@ router.delete('/:orderId/:itemId', async (req, res, next) => {
 
 //update order count (quantity)
 router.put('/:orderId/:itemId', async function(req, res, next) {
-  const oId = req.params.orderId
-  const pId = req.params.itemId
+  const oId = req.sanitize(req.params.orderId)
+  const pId = req.sanitize(req.params.itemId)
   try {
     const [numAffectedRows, affectedRows] = await orderDetails.update(
       {
@@ -82,6 +88,7 @@ router.put('/:orderId/:itemId', async function(req, res, next) {
         returning: true
       }
     )
+    res.send('boop')
   } catch (error) {
     next(error)
   }
