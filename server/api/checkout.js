@@ -39,10 +39,68 @@ router.get('', adminsOnly, async (req, res, next) => {
 
 router.post('/', async (req, res, next) => {
   try {
-    let newOrder = await Order.create(req.sanitize(req.body))
+    const userId = req.sanitize(req.body.userId)
+    let newOrder = await Order.create({
+      userId: userId,
+      orderComplete: false
+    })
     res.json(newOrder)
   } catch (err) {
     next(err)
+  }
+})
+
+//get all incomplete carts
+router.get('/active', async (req, res, next) => {
+  try {
+    const allActive = await Order.findAll({
+      where: {orderComplete: false}
+    })
+    res.json(allActive)
+  } catch (error) {
+    next(error)
+  }
+})
+
+//gets all incomplete carts by user
+router.get('/active/:userId', async (req, res, next) => {
+  const userId = req.params.userId
+  try {
+    const active = await Order.findOne({
+      where: {
+        orderComplete: false,
+        userId: userId
+      }
+    })
+    res.json(active)
+  } catch (error) {
+    next(error)
+  }
+})
+
+router.get('/complete', async (req, res, next) => {
+  try {
+    const allComplete = await Order.findAll({
+      where: {orderComplete: true}
+    })
+    res.json(allComplete)
+  } catch (error) {
+    next(error)
+  }
+})
+
+router.get('/complete/:userId', async (req, res, next) => {
+  const userId = req.params.userId
+  try {
+    const complete = await Order.findAll({
+      where: {
+        orderComplete: true,
+        userId: userId
+      }
+    })
+    res.json(complete)
+  } catch (error) {
+    next(error)
   }
 })
 

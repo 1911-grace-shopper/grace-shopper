@@ -4,12 +4,6 @@ const GET_CART = 'GET_CART'
 const ADD_ITEM_TO_CART = 'ADD_ITEM_TO_CART'
 const REMOVE_ITEM_FROM_CART = 'REMOVE_ITEM_FROM_CART'
 const UPDATE_COUNT_IN_CART = 'UPDATE_COUNT_IN_CART'
-const COMPLETE_CHECKOUT = 'COMPLETE_CHECKOUT'
-
-const completeCheckout = updateOrder => ({
-  type: COMPLETE_CHECKOUT,
-  updateOrder
-})
 
 const gotCart = cart => ({
   type: GET_CART,
@@ -19,7 +13,6 @@ const gotCart = cart => ({
 export const getCart = () => {
   return async dispatch => {
     let cartId
-    //if user logged in ->set cartId to their cart
 
     if (sessionStorage.getItem('cartId')) {
       cartId = JSON.parse(sessionStorage.getItem('cartId'))
@@ -30,6 +23,8 @@ export const getCart = () => {
         item.orderId = cartId
       })
       dispatch(gotCart(cart))
+    } else {
+      dispatch(gotCart([]))
     }
   }
 }
@@ -100,16 +95,15 @@ export const addItemToCart = (item, user) => {
   }
 }
 
-export const completeAnOrder = (form, history) => async dispatch => {
+export const submitOrder = (form, history) => async dispatch => {
   try {
-    console.log('COMPLETE ORDER THUNK', form.orderId)
-    const res = await Axios.put(`/api/checkout/${form.orderId}`, form)
-    const info = res.data
+    const {data} = await Axios.put(`/api/checkout/${form.orderId}`, form)
+
     sessionStorage.clear()
     history.push('/confirmation')
-    dispatch(completeCheckout(info))
+    dispatch(getCart())
   } catch (err) {
-    console.log('This is from the completeOrder thunk', err)
+    console.log(err)
   }
 }
 
@@ -120,12 +114,12 @@ const itemDeleted = itemId => ({
 
 export const deleteItem = item => {
   return async dispatch => {
-    let cartId = JSON.parse(sessionStorage.getItem('cartId'))
-    let currentCart = await Axios.get(`/api/carts/${cartId}`)
-    let itemtoDelete = currentCart.data.filter(
-      itemInCart => itemInCart.id === item.id
-    )
     try {
+      let cartId = JSON.parse(sessionStorage.getItem('cartId'))
+      let currentCart = await Axios.get(`/api/carts/${cartId}`)
+      let itemtoDelete = currentCart.data.filter(
+        itemInCart => itemInCart.id === item.id
+      )
       let deletedItem = itemtoDelete[0]
       //if only one in cart
       if (deletedItem.orderDetails.count <= 1) {
@@ -145,7 +139,7 @@ export const deleteItem = item => {
         })
       }
     } catch (error) {
-      console.log('Delete Error')
+      console.log(error)
     }
   }
 }
@@ -168,9 +162,6 @@ const cartReducer = (state = initialState, action) => {
       return state
     case REMOVE_ITEM_FROM_CART:
       return state.filter(item => item.id !== action.itemId)
-
-    case COMPLETE_CHECKOUT:
-      return []
     default:
       return state
   }

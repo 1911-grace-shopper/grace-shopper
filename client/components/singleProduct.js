@@ -3,7 +3,7 @@ import {connect} from 'react-redux'
 import {getSingleProductFromServer} from '../store/productReducer'
 import {addItemToCart} from '../store/cart'
 import ImageSlides from './imageSlides'
-import {Grid, Typography, Button} from '@material-ui/core'
+import {Grid, Typography, Button, Paper} from '@material-ui/core'
 import displayDollars from './helper'
 
 class SingleProduct extends React.Component {
@@ -31,10 +31,11 @@ class SingleProduct extends React.Component {
     return (
       <Grid
         container
-        justify="space-around"
-        alignItems="center"
+        justify="center"
+        alignItems="stretch"
         spacing={4}
         className="main"
+        id="single-product"
       >
         {images && (
           <Grid item sm={6}>
@@ -42,22 +43,25 @@ class SingleProduct extends React.Component {
           </Grid>
         )}
         <Grid item sm={6}>
-          <Typography variant="h4"> {name} </Typography>
-          <Typography variant="subtitle1">
-            Price: {displayDollars(price)}
-          </Typography>
-          <Typography variant="subtitle1">Width: {width} ft</Typography>
-          <Typography variant="subtitle1">Length: {length} ft</Typography>
-          <Typography variant="subtitle1">Sleeps: {beds}</Typography>
-          <Typography variant="body1">Description: {description}</Typography>
-          <Button
-            variant="contained"
-            onClick={() => {
-              this.props.addToCart(this.props.selectedProduct, this.props.user)
-            }}
-          >
-            BUY ME!
-          </Button>
+          <Paper elevation={3} className="description">
+            <Typography variant="h4"> {name} </Typography>
+            <Typography variant="h6">Price: {displayDollars(price)}</Typography>
+            <Typography variant="body2">Width: {width} ft</Typography>
+            <Typography variant="body2">Length: {length} ft</Typography>
+            <Typography variant="body2">Sleeps: {beds}</Typography>
+            <Typography variant="body2">Description: {description}</Typography>
+            <Button
+              variant="contained"
+              onClick={() => {
+                this.props.addToCart(
+                  this.props.selectedProduct,
+                  this.props.user
+                )
+              }}
+            >
+              Purchase this Home
+            </Button>
+          </Paper>
         </Grid>
       </Grid>
     )
@@ -74,9 +78,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     getSingleProduct: productId => {
       dispatch(getSingleProductFromServer(productId))
-    },
-    getCarouselImages: filePathName => {
-      dispatch(getImageList(filePathName))
     },
     addToCart: (item, user) => {
       dispatch(addItemToCart(item, user))
