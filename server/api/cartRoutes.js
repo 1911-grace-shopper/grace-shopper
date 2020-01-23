@@ -14,7 +14,6 @@ router.get('', async (req, res, next) => {
 //specific order (cart)
 router.get('/:orderId', async (req, res, next) => {
   const id = Number(req.params.orderId)
-  console.log(id, 'ID In BackEND')
 
   try {
     const order = await Order.findOne({
@@ -88,7 +87,6 @@ router.put('/:orderId/:itemId', async function(req, res, next) {
         returning: true
       }
     )
-    console.log(affectedRows)
     res.json(affectedRows)
   } catch (error) {
     next(error)

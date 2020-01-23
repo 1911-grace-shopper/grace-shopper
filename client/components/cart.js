@@ -19,7 +19,7 @@ export class Cart extends React.Component {
     if (itemsInCart.length === 0) {
       return <div>Please add some tiny homes to your cart!</div>
     }
-    console.log('current cart', this.props.currentCart)
+
     return (
       <div>
         {itemsInCart.map(item => {

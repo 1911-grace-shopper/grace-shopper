@@ -30,7 +30,7 @@ export const getSingleProductFromServer = productId => async dispatch => {
     product.data.images = images.data
     dispatch(getSingleProduct(product.data))
   } catch (err) {
-    console.log(err)
+    console.error(err)
   }
 }
 
