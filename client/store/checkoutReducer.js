@@ -5,7 +5,9 @@ export const handleFormChange = form => ({
   form
 })
 
-const initialState = {}
+const initialState = {
+  warningMessage: '*'
+}
 
 const checkoutReducer = (state = initialState, action) => {
   switch (action.type) {

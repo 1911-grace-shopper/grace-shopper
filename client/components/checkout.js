@@ -8,9 +8,6 @@ import displayDollars from './helper'
 class Checkout extends React.Component {
   constructor(props) {
     super(props)
-    this.state = {
-      warningMessage: '*'
-    }
     this.total = 0
     this.isComplete = this.isComplete.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
@@ -75,7 +72,7 @@ class Checkout extends React.Component {
         <div>Total: {displayDollars(Number(total))}</div>
         <div />
         <Form
-          {...this.state}
+          {...this.props.checkoutForm}
           handleChange={this.props.handleFormChange}
           handleSubmit={this.handleSubmit}
           isComplete={this.isComplete}
