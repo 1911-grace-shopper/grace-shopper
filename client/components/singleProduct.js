@@ -59,7 +59,7 @@ class SingleProduct extends React.Component {
                 )
               }}
             >
-              Purchase this Home
+              Purchase this House
             </Button>
           </Paper>
         </Grid>
@@ -74,7 +74,7 @@ const mapStateToProps = state => ({
   user: state.user
 })
 
-const mapDispatchToProps = (dispatch, ownProps) => {
+const mapDispatchToProps = dispatch => {
   return {
     getSingleProduct: productId => {
       dispatch(getSingleProductFromServer(productId))
