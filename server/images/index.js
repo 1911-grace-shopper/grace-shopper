@@ -30,7 +30,6 @@ router.get('/:productName', async (req, res, next) => {
       path.join(__dirname, '../..', `public/images/${productName}`),
       (err, files) => {
         if (err) {
-          console.log('Unable to scan directory: ' + err)
           next(err)
         }
         if (files) {

@@ -11,7 +11,6 @@ export const getPastOrdersFromServer = userId => async dispatch => {
   try {
     const res = await Axios.get(`/api/checkout/complete/${userId}`)
     dispatch(getPastOrders(res.data))
-    console.log(res.data[0])
   } catch (err) {
     console.error(err)
   }

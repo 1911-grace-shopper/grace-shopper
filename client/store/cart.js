@@ -102,7 +102,7 @@ export const submitOrder = (form, history) => async dispatch => {
     history.push('/confirmation')
     dispatch(getCart())
   } catch (err) {
-    console.log(err)
+    console.error(err)
   }
 }
 
@@ -134,7 +134,7 @@ export const deleteItem = item => {
         dispatch(getCart())
       }
     } catch (error) {
-      console.log(error)
+      console.error(error)
     }
   }
 }
