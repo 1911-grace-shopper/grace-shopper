@@ -27,7 +27,7 @@ async function seed() {
     }),
     Product.create({
       name: 'Lykke',
-      price: 0,
+      price: 8500000,
       length: 24,
       width: 8.5,
       beds: 4,

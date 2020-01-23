@@ -2,15 +2,12 @@ import React from 'react'
 import {connect} from 'react-redux'
 import Form from './checkoutForm'
 import {getCart, submitOrder} from '../store/cart'
-import {handleFormChange} from '../store/checkoutReducer'
+import {handleFormChange, clearFormChange} from '../store/checkoutReducer'
 import displayDollars from './helper'
 
 class Checkout extends React.Component {
   constructor(props) {
     super(props)
-    this.state = {
-      warningMessage: '*'
-    }
     this.total = 0
     this.isComplete = this.isComplete.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
@@ -30,6 +27,7 @@ class Checkout extends React.Component {
     }
     const orderForm = {...this.props.checkoutForm, ...mainInfo}
     this.props.submitOrder(orderForm)
+    this.props.clearFormChange()
   }
 
   calculateTotal() {
@@ -75,7 +73,7 @@ class Checkout extends React.Component {
         <div>Total: {displayDollars(Number(total))}</div>
         <div />
         <Form
-          {...this.state}
+          {...this.props.checkoutForm}
           handleChange={this.props.handleFormChange}
           handleSubmit={this.handleSubmit}
           isComplete={this.isComplete}
@@ -100,7 +98,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       const form = {[event.target.name]: event.target.value}
       dispatch(handleFormChange(form))
     },
-    submitOrder: orderForm => dispatch(submitOrder(orderForm, ownProps.history))
+    submitOrder: orderForm =>
+      dispatch(submitOrder(orderForm, ownProps.history)),
+    clearFormChange: () => dispatch(clearFormChange())
   }
 }
 

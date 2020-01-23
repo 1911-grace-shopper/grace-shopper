@@ -3,23 +3,6 @@ const fs = require('fs')
 const router = require('express').Router()
 module.exports = router
 
-// function getImages(dirname) {
-//   fs.readdir(path.join(__dirname, '../..', `public/images/${dirname}`), (err, files) => {
-//     if (err) {
-//       console.log('Unable to scan directory: ' + err)
-//       throw err
-//     }
-//     if (files) {
-//       let images = []
-//       files.forEach(file => {
-//         images.push(file)
-//       })
-//       console.log(images)
-//       return images
-//     }
-//   })
-// }
-
 router.get('/:productName', async (req, res, next) => {
   try {
     // get image file names from file directory
