@@ -104,7 +104,7 @@
     "lint-staged": "^8.1.5",
     "mocha": "^6.2.2",
     "mock-local-storage": "^1.1.11",
-    "node-sass": "^4.13.1",
+    "node-sass": "^7.0.0",
     "nodemon": "^1.19.4",
     "npm-merge-driver": "^2.3.5",
     "prettier": "1.11.1",
